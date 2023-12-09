@@ -1,0 +1,64 @@
+import 'dart:async';
+
+import 'package:clockie/constant/widet_setting.dart';
+import 'package:flutter/Material.dart';
+
+import '../notification/notification_service.dart';
+
+class TimerProvider extends ChangeNotifier{
+  int _hour=0;
+  int _min=0;
+  int _sec=0;
+  int _milliSum=0;
+  int _milliLeft=0;
+  bool _isRunning=false;
+  Timer? _timer;
+  //getters
+  double get percent=>_milliLeft/_milliSum;
+  get milliLeft=>_milliLeft;
+  get secLeft=>_milliLeft~/1000;
+  get isRunning=>_isRunning;
+  get timerActive=>_timer?.isActive;
+  //setters
+  set hour(int hour)=>_hour=hour;
+  set min(int minute)=>_min=minute;
+  set sec(int second)=>_sec=second;
+  set secSum(int milliSum)=>_milliSum=milliSum;
+
+  void _timerChangeCallback(Timer timer)async{
+    if(_milliLeft>0) {
+      _milliLeft-=WidgetSetting.updateInterval;
+      notifyListeners();
+      return;
+    }
+    NotificationService.showNotification(title: "Timer", body: "The timer has expired");
+    _timer?.cancel();
+    _isRunning=false;
+    notifyListeners();
+  }
+  void start(){
+    if(_hour==0&&_min==0&&_sec==0) return;
+    _isRunning=true;
+    _milliSum=_hour*3600+_min*60+_sec;
+    _milliSum*=1000;
+    _milliLeft=_milliSum;
+    _timer=Timer.periodic(const Duration(milliseconds: WidgetSetting.updateInterval), _timerChangeCallback);
+    notifyListeners();
+  }
+  void countingStateChange(){
+    if(timerActive) {
+      _timer?.cancel();
+    } else {
+      _timer=Timer.periodic(const Duration(milliseconds: WidgetSetting.updateInterval), _timerChangeCallback);
+    }
+    notifyListeners();
+  }
+  void reset(){
+    _timer?.cancel();
+    _isRunning=false;
+    _hour=0;
+    _min=0;
+    _sec=0;
+    notifyListeners();
+  }
+}

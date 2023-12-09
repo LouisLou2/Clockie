@@ -1,0 +1,18 @@
+1. Hive的box每次open是需要重新复制的，原先引用变量引用的对象已经不存在了
+
+
+2. 注意到我在AlarmPage和WorldClockPage都用了with AutomaticKeepAliveClientMixin
+@override
+bool get wantKeepAlive => true;
+
+super.build(context);
+其实四个tab页面都不用也没关系，但是AlarmPage和WorldClockPage渲染更复杂，这样可以在内存中驻留(转到其他tab不会调用原先界面的dispose方法);
+但是此方法不能滥用，会造成内存占用多的问题。
+
+3. tab的转换默认会引起原tab的dispose，但是通过路由转到其他界面，并不会引起原页面dispose
+
+4. 一个流默认只能会一个监听者监听，否则会异常，如果需要共享一个流，应该用广播流
+
+5. 注意异步操作的顺序性，有些操作即使是异步，也讲究顺序，合理利用async和await
+
+6.还有其他知识在ipad上记录
