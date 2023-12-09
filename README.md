@@ -5,7 +5,7 @@
 A simple clock.
 
 ## Screenshots
-<img src="https://github.com/LouisLou2/Clockie/blob/master/screenshots/alarm_page.jpg" alt="alarm_page" height="300"/> 
+<img src="https://github.com/LouisLou2/Clockie/blob/master/screenshots/alarm_page.jpg" alt="alarm_page" height="600"/> 
 <img src="https://github.com/LouisLou2/Clockie/blob/master/screenshots/add_clock.jpg" alt="add_clock" height="300"/>
 <img src="https://github.com/LouisLou2/Clockie/blob/master/screenshots/world_clock.jpg" alt="world_clock" height="300"/>
 <img src="https://github.com/LouisLou2/Clockie/blob/master/screenshots/add_city.jpg" alt="add_city" height="300"/>
