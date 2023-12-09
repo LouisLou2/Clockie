@@ -48,7 +48,7 @@ class _AlarmPageState extends State<AlarmPage> with AutomaticKeepAliveClientMixi
     return Scaffold(
       backgroundColor: AppStyles.backGroundColor,
       appBar: AppBar(
-        title: Text("My Alarm",style: AppStyles.mediumBarStyle),
+        title: const Text("My Alarm",style: AppStyles.mediumBarStyle),
         backgroundColor: AppStyles.backGroundColor,
         elevation: 0,
         toolbarHeight: 70,

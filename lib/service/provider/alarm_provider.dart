@@ -21,11 +21,6 @@ class AlarmProvider extends ChangeNotifier {
     return AlarmBox.box.get(id)!;
   }
   void pickDay(int index) {
-    if(alarmNowSetting.days[index]){
-      --alarmNowSetting.pickNum;
-    }else {
-      ++alarmNowSetting.pickNum;
-    }
     alarmNowSetting.changeDay(index);
     notifyListeners();
   }
