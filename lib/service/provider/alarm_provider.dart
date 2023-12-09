@@ -62,7 +62,6 @@ class AlarmProvider extends ChangeNotifier {
     alarmNowSetting.id = id;
     //alarmMap[id]=alarmNowSetting;
     AlarmBox.box.put(id, alarmNowSetting);
-
     alarmNowSetting=Alarm.active();//重置,如果仍在原来的alarmNowSetting上修改，会影响到alarmList里的变量
     notifyListeners();
   }

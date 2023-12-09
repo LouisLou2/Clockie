@@ -69,11 +69,11 @@ Widget alarmCard(String id,BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Selector<AlarmProvider,String>(
-                  selector: (context,provider) => provider.getAlarm(id).timeStr??'error',
+                  selector: (context,provider) => provider.getAlarm(id).timeStr,
                   builder: (context,timeStr,child) => Text(timeStr,style: AppStyles.numberStyle)
                 ),
                 Selector<AlarmProvider,bool>(
-                  selector: (context,provider) => provider.getAlarm(id).isActive??false,
+                  selector: (context,provider) => provider.getAlarm(id).isActive,
                   builder: (context,isActive,child) => CupertinoSwitch(
                     activeColor: AppStyles.blueColor,
                     trackColor: AppStyles.backGroundColor,
@@ -87,7 +87,7 @@ Widget alarmCard(String id,BuildContext context) {
             ),
             dayOfWeekRow(id),
             Selector<AlarmProvider,int>(
-              selector: (context,provider) => provider.getAlarm(id).pickNum??0,
+              selector: (context,provider) => provider.getAlarm(id).pickNum,
               builder: (context,pickNum,child) =>Text(pickNum==0?'Once':'$pickNum Days',style: AppStyles.subTxtStyle),
             ),
           ],
