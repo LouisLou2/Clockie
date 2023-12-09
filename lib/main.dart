@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {//WidgetsBindin
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) =>  MaterialApp(
-          title: 'MyClock',
+          title: 'Clockie',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
               scaffoldBackgroundColor: AppStyles.backGroundColor
