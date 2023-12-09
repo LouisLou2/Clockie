@@ -16,7 +16,7 @@ A simple clock.
 
 ## Download
 
-[Andriod](https://github.com/LouisLou2/Clockie/releases/download/v1.0.0/app-release.apk)
+[Andriod](https://github.com/LouisLou2/Clockie/releases/download/v1.0.2/app-release.apk)
 
 
 ## Getting Started

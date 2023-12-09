@@ -24,6 +24,7 @@ class AlarmProvider extends ChangeNotifier {
     alarmNowSetting.changeDay(index);
     notifyListeners();
   }
+  //从box.get()得到的alarm都是引用，可以在这里直接修改，不用再put
   void filterActiveState(){
     DateTime now=DateTime.now();
     DateFormat formatter=DateFormat(DateFormatter.DATE_TIME_FORMAT);
@@ -33,7 +34,6 @@ class AlarmProvider extends ChangeNotifier {
       that=formatter.parse(entry.value.meantTime);
       if(that.isAfter(now))continue;
       entry.value.isActive=false;
-      AlarmBox.box.put(entry.key, entry.value);
     }
   }
   void setNowAlarmNameAndDesc(String alarmName,String desc) {
@@ -55,7 +55,6 @@ class AlarmProvider extends ChangeNotifier {
     }
     String id=await AlarmManager.smartSetAlarm(alarmNowSetting,InvokeHandler.notifyAndSmartTurnOff);
     alarmNowSetting.id = id;
-    //alarmMap[id]=alarmNowSetting;
     AlarmBox.box.put(id, alarmNowSetting);
     alarmNowSetting=Alarm.active();//重置,如果仍在原来的alarmNowSetting上修改，会影响到alarmList里的变量
     notifyListeners();
@@ -84,11 +83,9 @@ class AlarmProvider extends ChangeNotifier {
   }
   //返回是否真的取消了一个闹钟，因为有的本来状态就是关闭的
   bool turnOffAlarmWithoutNotify(String id){
-    //Alarm theAlarm=alarmMap[id]!;
     Alarm theAlarm=AlarmBox.box.get(id)!;
     if(!theAlarm.isActive)return false;
     theAlarm.isActive=false;//这里也会改变alarmMap里的变量
-    AlarmBox.box.put(id, theAlarm);
     List<int> ids=alarmKeyParse(id);
     for(var id in ids) {
       AlarmManager.cancelAlarm(id);
@@ -97,20 +94,18 @@ class AlarmProvider extends ChangeNotifier {
   }
   //不启用一个闹钟
   void changeAlarmActive(String id) {
-    //Alarm theAlarm=alarmMap[id]!;
     Alarm theAlarm=AlarmBox.box.get(id)!;
     bool act = theAlarm.isActive;
     theAlarm.isActive=!act;
     List<int> ids=alarmKeyParse(id);
     if(act) {
-      for(var id in ids) {
-        AlarmManager.cancelAlarm(id);
+      for(var aid in ids) {
+        AlarmManager.cancelAlarm(aid);
       }
     } else {
       AlarmManager.smartSetAlarm(theAlarm, InvokeHandler.notifyAndSmartTurnOff).then(
         (value) {
           theAlarm.id=value;
-          AlarmBox.box.put(id, theAlarm);
         }
       );
     }
