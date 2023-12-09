@@ -6,14 +6,14 @@ A simple clock.
 
 ## Screenshots
 
-![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/add_city.png)
-![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/add_clock.png)
-![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/world_clock.png)
-![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/add_city.png)
-![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/stopwatch.png)
-![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/stopwatch_lap.png)
-![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/timer.png)
-![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/timer_set.png)
+![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/alarm_page.jpg)
+![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/add_clock.jpg)
+![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/world_clock.jpg)
+![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/add_city.jpg)
+![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/stopwatch.jpg)
+![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/stopwatch_lap.jpg)
+![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/timer.jpg)
+![](https://github.com/LouisLou2/Clockie/blob/master/screenshots/timer_set.jpg)
 ## Download
 
 [Andriod](https://github.com/LouisLou2/Clockie/releases/download/v1.0.0/app-release.apk)
