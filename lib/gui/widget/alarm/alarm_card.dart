@@ -1,5 +1,4 @@
 import 'package:clockie/dict/date_dict.dart';
-import 'package:clockie/model/alarm_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -88,7 +87,21 @@ Widget alarmCard(String id,BuildContext context) {
             dayOfWeekRow(id),
             Selector<AlarmProvider,int>(
               selector: (context,provider) => provider.getAlarm(id).pickNum,
-              builder: (context,pickNum,child) =>Text(pickNum==0?'Once':'$pickNum Days',style: AppStyles.subTxtStyle),
+              builder: (context,pickNum,child){
+                String? value;
+                switch(pickNum){
+                  case 0:
+                    value='Once';
+                    break;
+                  case 7:
+                    value='Everyday';
+                    break;
+                  default:
+                    value='$pickNum Days';
+                    break;
+                }
+                return Text(value,style: AppStyles.subTxtStyle);
+              }
             ),
           ],
         ),
