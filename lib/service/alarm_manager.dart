@@ -30,6 +30,15 @@ class AlarmManager{
     }
     return ids;
   }
+  static List<Tuple2<int,int>> _findBelong(Alarm alarm){
+    List<int> ids=alarm.id.split(':').map((e) => int.parse(e)).toList();
+    List<Tuple2<int,int>> idAndWeekdays=[];
+    int j=0;
+    for(int i=0;i<alarm.days.length;++i){
+      if(alarm.days[i])idAndWeekdays.add(Tuple2(i+1, ids[j++]));//这里的i+1是weekday
+    }
+    return idAndWeekdays;
+  }
   static DateTime _getFirstInvokeTime(HourMin time) {
     upadateNowTime();
     DateTime invoketime = DateTime(nowtime.year, nowtime.month, nowtime.day, time.hour, time.min);
@@ -75,6 +84,19 @@ class AlarmManager{
       return unitId;
     }
   }
+  static Future<void> smartSetAlarmWithExistingId(Alarm alarm, Function doThingsWhenInvoke) async{
+    Map<String,dynamic>aparams=getStanderedParam(alarm);
+    if(alarm.pickNum==0){
+      _setAlarmTimeOnceWithExistingId(int.parse(alarm.id),HourMin(alarm.hour, alarm.min), doThingsWhenInvoke,aparams);
+    }
+    else{
+      final List<Tuple2<int,int>>ids=_findBelong(alarm);
+
+      for(int i=0;i<ids.length;++i){
+        setAlarmForLoop(id:ids[i].item2, unitId: alarm.id, alarm:alarm, time: _getFirstInvokeTimeWithWeekday(HourMin(alarm.hour,alarm.min),ids[i].item1), doThingsWhenInvoke: doThingsWhenInvoke, aparams: aparams);
+      }
+    }
+  }
   static Future<int> _setAlarmTimeOnce(HourMin time, Function doThingsWhenInvoke,Map<String, dynamic>?aparams) async {
     aparams ??= Map.from(defaultAlarmParams);
     aparams['isOnce']=true;
@@ -89,6 +111,19 @@ class AlarmManager{
         params: aparams,
     );
     return id;
+  }
+  static Future<void> _setAlarmTimeOnceWithExistingId(int id,HourMin time, Function doThingsWhenInvoke,Map<String, dynamic>?aparams) async {
+    aparams ??= Map.from(defaultAlarmParams);
+    aparams['isOnce']=true;
+    aparams['id']=id.toString();
+    AndroidAlarmManager.oneShotAt(_getFirstInvokeTime(time), id, doThingsWhenInvoke,
+      exact: true,
+      wakeup: true,
+      alarmClock: true,
+      allowWhileIdle: true,
+      rescheduleOnReboot: true,
+      params: aparams,
+    );
   }
   //这个方法专门给循环设置闹钟用的，而且他完全不能用于单次闹钟，两个方法的实现细节也是不一样的
   static void setAlarmForLoop({required int id,required String unitId,Alarm? alarm, required DateTime time, required Function doThingsWhenInvoke,Map<String, dynamic>?aparams}) async {

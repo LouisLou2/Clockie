@@ -104,12 +104,13 @@ class AlarmProvider extends ChangeNotifier {
         AlarmManager.cancelAlarm(aid);
       }
     } else {
-      AlarmManager.smartSetAlarm(theAlarm, InvokeHandler.notifyAndSmartTurnOff).then(
-        (value) {
-          theAlarm.id=value;
-          AlarmBox.box.put(id, theAlarm);
-        }
-      );
+      AlarmManager.smartSetAlarmWithExistingId(theAlarm, InvokeHandler.notifyAndSmartTurnOff);
+      // AlarmManager.smartSetAlarm(theAlarm, InvokeHandler.notifyAndSmartTurnOff).then(
+      //   (value) {
+      //     theAlarm.id=value;
+      //     AlarmBox.box.put(value, theAlarm);
+      //   }
+      // );
     }
     notifyListeners();
   }
