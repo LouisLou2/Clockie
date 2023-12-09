@@ -23,14 +23,23 @@ class AlarmProvider extends ChangeNotifier {
     alarmNowSetting.changeDay(index);
     notifyListeners();
   }
+  ///这个不仅是将过期闹钟的状态改为false，还会将把应该Active的闹钟再次重新设置一遍，
+  ///因为我发现我只要一离开应用（Swiped）,再次进入，即使闹钟应该是Active的，也不会触发，所以再次设置一遍
+  ///如果这个问题解决了，那么这个方法就不必那么麻烦了
   void filterActiveState(){
     DateTime now=DateTime.now();
     DateFormat formatter=DateFormat(DateFormatter.DATE_TIME_FORMAT);
     DateTime? that;
     for(var entry in AlarmBox.box.toMap().entries) {
-      if(entry.value.pickNum!=0)continue;
+      if(entry.value.pickNum!=0){
+        AlarmManager.smartSetAlarmWithExistingId(entry.value, InvokeHandler.notifyAndSmartTurnOff);
+        continue;
+      }
       that=formatter.parse(entry.value.meantTime);
-      if(that.isAfter(now))continue;
+      if(that.isAfter(now)){
+        AlarmManager.smartSetAlarmWithExistingId(entry.value, InvokeHandler.notifyAndSmartTurnOff);
+        continue;
+      }
       entry.value.isActive=false;
       AlarmBox.box.put(entry.key, entry.value);
     }
@@ -42,15 +51,7 @@ class AlarmProvider extends ChangeNotifier {
   void submitAlarm() async {
     bool isOnce=alarmNowSetting.pickNum==0;
     if(isOnce) {
-      DateTime now=DateTime.now();
-      if(TimeUtil.isTheAlarmShouldInTomorrow(alarmNowSetting)) {
-        now=DateTime(now.year,now.month,now.day,alarmNowSetting.hour,alarmNowSetting.min);
-        //说明此闹钟应在明天
-        alarmNowSetting.meantTime=DateFormatter.format(now.add(const Duration(days:1)), DateFormatter.DATE_TIME_FORMAT);
-      }else{
-        now=DateTime(now.year,now.month,now.day,alarmNowSetting.hour,alarmNowSetting.min);
-        alarmNowSetting.meantTime=DateFormatter.format(now, DateFormatter.DATE_TIME_FORMAT);
-      }
+      TimeUtil.equipMeanTime(alarmNowSetting);
     }
     String id=await AlarmManager.smartSetAlarm(alarmNowSetting,InvokeHandler.notifyAndSmartTurnOff);
     alarmNowSetting.id = id;
@@ -68,6 +69,7 @@ class AlarmProvider extends ChangeNotifier {
     notifyListeners();
   }
   void deleteItemById(String id) {
+    if(!(AlarmBox.box.get(id)!.isActive))return;
     List<int> ids=alarmKeyParse(id);
     for(var id in ids) {
       AlarmManager.cancelAlarm(id);
@@ -105,12 +107,6 @@ class AlarmProvider extends ChangeNotifier {
       }
     } else {
       AlarmManager.smartSetAlarmWithExistingId(theAlarm, InvokeHandler.notifyAndSmartTurnOff);
-      // AlarmManager.smartSetAlarm(theAlarm, InvokeHandler.notifyAndSmartTurnOff).then(
-      //   (value) {
-      //     theAlarm.id=value;
-      //     AlarmBox.box.put(value, theAlarm);
-      //   }
-      // );
     }
     notifyListeners();
   }

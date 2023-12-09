@@ -45,4 +45,15 @@ class TimeUtil{
     DateTime now=DateTime.now();
     return now.hour>alarm.hour||(now.hour==alarm.hour&&now.minute>=alarm.min);
   }
+  static void equipMeanTime(Alarm alarm){
+    DateTime now=DateTime.now();
+    if(isTheAlarmShouldInTomorrow(alarm)) {
+      now=DateTime(now.year,now.month,now.day,alarm.hour,alarm.min);
+      //说明此闹钟应在明天
+      alarm.meantTime=DateFormatter.format(now.add(const Duration(days:1)), DateFormatter.DATE_TIME_FORMAT);
+    }else{
+      now=DateTime(now.year,now.month,now.day,alarm.hour,alarm.min);
+      alarm.meantTime=DateFormatter.format(now, DateFormatter.DATE_TIME_FORMAT);
+    }
+  }
 }
