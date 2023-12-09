@@ -16,7 +16,6 @@ void main()async{
   await initMustBeforeRunApp();
   initNormally();
   runApp(const MyApp());
-  cleanUp();
 }
 
 class MyApp extends StatelessWidget with WidgetsBindingObserver {//WidgetsBindingObserver用于监听生命周期,直接在main函数中runApp之后执行是不行的

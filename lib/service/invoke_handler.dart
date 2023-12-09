@@ -1,5 +1,6 @@
 import 'dart:isolate';
 import 'dart:ui';
+import 'package:clockie/constant/command_code.dart';
 import 'package:clockie/model/command_message.dart';
 import 'notification/notification_vault.dart';
 class InvokeHandler{
@@ -12,7 +13,10 @@ class InvokeHandler{
     bool isOnce=params['isOnce']??false;
     if(isOnce){
       SendPort? sendPort = IsolateNameServer.lookupPortByName(params['portName']);
-      sendPort?.send(CommandMessage(cmdCode: 0, id: params['id']).toString());
+      sendPort?.send(CommandMessage(cmdCode: CommandCode.TurnOffAlarm, id: params['id']).toString());
+    }else{
+      SendPort? sendPort = IsolateNameServer.lookupPortByName(params['portName']);
+      sendPort?.send(CommandMessage(cmdCode: CommandCode.restartAlarmNextWeek, id: params['id'],uniqueId: params['uniqueId']).toString());
     }
     NotificationVault.showAlarmNotification(id,params);
   }

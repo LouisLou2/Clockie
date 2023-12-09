@@ -70,7 +70,10 @@ class AlarmProvider extends ChangeNotifier {
     notifyListeners();
   }
   void deleteItemById(String id) {
-    //alarmMap.remove(id);
+    List<int> ids=alarmKeyParse(id);
+    for(var id in ids) {
+      AlarmManager.cancelAlarm(id);
+    }
     AlarmBox.box.delete(id);
     notifyListeners();
   }

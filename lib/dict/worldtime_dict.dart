@@ -1,4 +1,3 @@
-import 'package:clockie/model/time_diff.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -6,11 +5,13 @@ import '../repository/timediff_box.dart';
 class WorldTimeDict{
   static late Map<String,int>timeDiffDict;
   static bool hasInited=false;
+  static bool isIniting=false;
   static List<String> get timeDiffDictAsList=>timeDiffDict.keys.toList();
   static int nativeOffset=DateTime.now().timeZoneOffset.inHours;
 
   static Future<void> init()async {
-    if(hasInited)return;
+    if(hasInited||isIniting)return;
+    isIniting=true;
     timeDiffDict={};
     //从box中读取
     await TimeDiffBox.openBox();
@@ -20,6 +21,7 @@ class WorldTimeDict{
     }
     timeDiffDict=TimeDiffBox.box.toMap().map((key, value) => MapEntry(key as String, value));
     hasInited=true;
+    isIniting=false;
     TimeDiffBox.closeBox();//关闭box
   }
   static void updateTimeDiff(){

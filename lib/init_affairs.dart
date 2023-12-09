@@ -7,6 +7,7 @@ import 'package:clockie/repository/alarm_box.dart';
 import 'package:clockie/repository/chosen_city_box.dart';
 import 'package:clockie/repository/setting_box.dart';
 import 'package:clockie/repository/timediff_box.dart';
+import 'package:clockie/service/alarm_manager.dart';
 import 'package:clockie/service/navigation/navigator_manager.dart';
 import 'package:clockie/service/notification/notification_service.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
@@ -21,7 +22,8 @@ Future<void>initMustBeforeRunApp()async {
   AlarmIsolateHandler.init();
   await Hive.initFlutter();
   Hive.registerAdapter(AlarmAdapter());
-  SettingBox.openBox();
+  await SettingBox.openBox();
+  AlarmManager.initAvailableId();
 }
 Future<void> initNormally() async{
   AlarmBox.openBox();
