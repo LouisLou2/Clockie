@@ -73,6 +73,6 @@ class Alarm {
     days[index]=newDays;
   }
   String get timeStr {
-    return '${hour >= 10 ? '$hour' : '0$hour'}:${min > 10 ? '$min' : '0$min'}';
+    return '${hour >= 10 ? '$hour' : '0$hour'}:${min >= 10 ? '$min' : '0$min'}';
   }
 }

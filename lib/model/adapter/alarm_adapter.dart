@@ -7,43 +7,6 @@ class AlarmAdapter extends TypeAdapter<Alarm> {
   @override
   final int typeId = 1;
 
-  // @override
-  // Alarm read(BinaryReader reader) {
-  //   final int numOfFields = reader.readByte();
-  //   //这里使用
-  //   final fields = <int, dynamic>{
-  //     for (int i = 0; i < numOfFields; ++i) reader.readByte(): reader.read(),
-  //   };
-  //   return Alarm.empty()
-  //   //级联操作符
-  //     ..id = fields[0] as int
-  //     ..name = fields[1] as String
-  //     ..hour = fields[2] as int
-  //     ..min = fields[3] as int
-  //     ..isActive = fields[4] as bool
-  //     ..days = fields[5] as List<bool>
-  //     ..desc = fields[6] as String;
-  // }
-  //
-  // @override
-  // void write(BinaryWriter writer, Alarm obj) {
-  //   writer
-  //     ..writeByte(Alarm.fieldsNum)//字段数
-  //     ..writeByte(0)
-  //     ..write(obj.id)
-  //     ..writeByte(1)
-  //     ..write(obj.name)
-  //     ..writeByte(2)
-  //     ..write(obj.hour)
-  //     ..writeByte(3)
-  //     ..write(obj.min)
-  //     ..writeByte(4)
-  //     ..write(obj.isActive)
-  //     ..writeByte(5)
-  //     ..write(obj.days)
-  //     ..writeByte(6)
-  //     ..write(obj.desc);
-  // }
   @override
   Alarm read(BinaryReader reader) {
     final int numOfFields = reader.readByte();

@@ -3,7 +3,6 @@ import 'package:clockie/repository/chosen_city_box.dart';
 import 'package:flutter/cupertino.dart';
 
 class WorldClockProvider extends ChangeNotifier{
-  //Set<String>timezones={};
   List<String> get timezonesList => ChosenCityBox.box.keys.toList().cast<String>();
   bool _dataInited=false;
   bool get isDataInited => _dataInited;
@@ -20,12 +19,10 @@ class WorldClockProvider extends ChangeNotifier{
     notifyListeners();
   }
   void selectCity(String timezone){
-    //timezones.add(timezone);
     ChosenCityBox.box.put(timezone, true);
     notifyListeners();
   }
   void removeCity(String timezone){
-    //timezones.remove(timezone);
     ChosenCityBox.box.delete(timezone);
     notifyListeners();
   }

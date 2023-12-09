@@ -10,7 +10,6 @@ import '../alarm_manager.dart';
 
 class AlarmProvider extends ChangeNotifier {
   Alarm alarmNowSetting = Alarm.active();
-  //Map<String,Alarm>alarmMap={};
   get alarmList=>AlarmBox.box.values.toList(growable: false);
   bool dataInited=false;
   bool get isDataInited => dataInited;
@@ -24,7 +23,6 @@ class AlarmProvider extends ChangeNotifier {
     alarmNowSetting.changeDay(index);
     notifyListeners();
   }
-  //从box.get()得到的alarm都是引用，可以在这里直接修改，不用再put
   void filterActiveState(){
     DateTime now=DateTime.now();
     DateFormat formatter=DateFormat(DateFormatter.DATE_TIME_FORMAT);
@@ -34,6 +32,7 @@ class AlarmProvider extends ChangeNotifier {
       that=formatter.parse(entry.value.meantTime);
       if(that.isAfter(now))continue;
       entry.value.isActive=false;
+      AlarmBox.box.put(entry.key, entry.value);
     }
   }
   void setNowAlarmNameAndDesc(String alarmName,String desc) {
@@ -85,7 +84,8 @@ class AlarmProvider extends ChangeNotifier {
   bool turnOffAlarmWithoutNotify(String id){
     Alarm theAlarm=AlarmBox.box.get(id)!;
     if(!theAlarm.isActive)return false;
-    theAlarm.isActive=false;//这里也会改变alarmMap里的变量
+    theAlarm.isActive=false;
+    AlarmBox.box.put(id, theAlarm);
     List<int> ids=alarmKeyParse(id);
     for(var id in ids) {
       AlarmManager.cancelAlarm(id);
@@ -97,6 +97,7 @@ class AlarmProvider extends ChangeNotifier {
     Alarm theAlarm=AlarmBox.box.get(id)!;
     bool act = theAlarm.isActive;
     theAlarm.isActive=!act;
+    AlarmBox.box.put(id, theAlarm);
     List<int> ids=alarmKeyParse(id);
     if(act) {
       for(var aid in ids) {
@@ -106,6 +107,7 @@ class AlarmProvider extends ChangeNotifier {
       AlarmManager.smartSetAlarm(theAlarm, InvokeHandler.notifyAndSmartTurnOff).then(
         (value) {
           theAlarm.id=value;
+          AlarmBox.box.put(id, theAlarm);
         }
       );
     }

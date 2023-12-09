@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 
-void cleanUp(){
+void cleanUp()async{
   // 关闭 Hive 连接
-  Hive.close();
-  print("Hive closed");
+  await Hive.close();
+  print('Hive closed******************************************');
 }
