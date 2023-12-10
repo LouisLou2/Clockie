@@ -34,8 +34,11 @@ Widget cityTimeCard(BuildContext context,String timezone) {
                     stream: TimeStream.getTimeStream(3),
                     initialData: Text(TimeUtil.getMonthDayStr(timezone),
                         style: AppStyles.subTxtStyle),
-                    builder: (context, snapshot) => Text(TimeUtil.getMonthDayStr(timezone),
-                        style: AppStyles.subTxtStyle),
+                    builder: (context, snapshot) => Selector<WorldClockProvider,bool>(
+                      selector: (context,provider)=>provider.resumeJustNow,
+                      builder: (context,resumeJustNow,child)=>Text(TimeUtil.getMonthDayStr(timezone),
+                          style: AppStyles.subTxtStyle),
+                    )
                 ),
                 const Text(' | ', style: AppStyles.subTxtStyle),
                 Text(TimeUtil.getDiffStr(timezone),
@@ -47,8 +50,11 @@ Widget cityTimeCard(BuildContext context,String timezone) {
             stream: TimeStream.getTimeStream(1),
             initialData: Text(TimeUtil.getHourMinStr(timezone),
                 style: AppStyles.timeTxtStyleB),
-            builder: (context, snapshot) => Text(TimeUtil.getHourMinStr(timezone),
-                style: AppStyles.timeTxtStyleB),
+            builder: (context, snapshot) => Selector<WorldClockProvider,bool>(
+              selector: (context,provider)=>provider.resumeJustNow,
+              builder: (context,resumeJustNow,child)=>Text(TimeUtil.getHourMinStr(timezone),
+                  style: AppStyles.timeTxtStyleB),
+            ),
           ),
         ),
       ),

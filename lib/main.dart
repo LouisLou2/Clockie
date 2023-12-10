@@ -1,5 +1,6 @@
 import 'package:clockie/cleanup_affairs.dart';
 import 'package:clockie/gui/page/stopwatch_page.dart';
+import 'package:clockie/service/life_cycle_recoder.dart';
 import 'package:clockie/service/navigation/navigator_manager.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:flutter/material.dart';
@@ -18,44 +19,65 @@ void main()async{
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget with WidgetsBindingObserver {//WidgetsBindingObserver用于监听生命周期,直接在main函数中runApp之后执行是不行的
+class MyApp extends StatefulWidget{//WidgetsBindingObserver用于监听生命周期,直接在main函数中runApp之后执行是不行的
   const MyApp({super.key});
-
   @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: PenthHouseProviders.alarmProvider),
-        ChangeNotifierProvider.value(value: PenthHouseProviders.worldClockProvider),
-        ChangeNotifierProvider.value(value:PenthHouseProviders.stopWatchProvider),
-        ChangeNotifierProvider.value(value:PenthHouseProviders.timerProvider),
-      ],
-      child: ScreenUtilInit(
-        designSize: const Size(360, 640),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (context, child) =>  MaterialApp(
-          title: 'Clockie',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-              scaffoldBackgroundColor: AppStyles.backGroundColor
-          ),
-          home: const Tab(),
-          routes: NavigatorManager.routes,//注册路由表
-        ),
-      ),
-    );
+  State<MyApp> createState() => _MyAppState ();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@addPostFrameCallback");
+    // });
   }
   @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    cleanUp();
+    super.dispose();
+  }
+  @override
+  Widget build(BuildContext context) => MultiProvider(
+    providers: [
+      ChangeNotifierProvider.value(value: PenthHouseProviders.alarmProvider),
+      ChangeNotifierProvider.value(value: PenthHouseProviders.worldClockProvider),
+      ChangeNotifierProvider.value(value:PenthHouseProviders.stopWatchProvider),
+      ChangeNotifierProvider.value(value:PenthHouseProviders.timerProvider),
+    ],
+    child: ScreenUtilInit(
+      designSize: const Size(360, 640),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) =>  MaterialApp(
+        title: 'Clockie',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            scaffoldBackgroundColor: AppStyles.backGroundColor
+        ),
+        home: const Tab(),
+        routes: NavigatorManager.routes,//注册路由表
+      ),
+    ),
+  );
+  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.detached) {
-      cleanUp();
+    if(state == AppLifecycleState.resumed){
+      if(!LifeCycleRecoder.isFirstResume){
+        PenthHouseProviders.worldClockProvider!.changeResumeJustNow();
+      }
+    }else if(state == AppLifecycleState.paused){
+      LifeCycleRecoder.isFirstResume = false;
     }
     super.didChangeAppLifecycleState(state);
   }
 }
 
-class Tab extends StatelessWidget {
+
+class Tab extends StatelessWidget{
   const Tab({super.key});
 
   Widget tabTxt(txt) => Text(txt,textAlign: TextAlign.center);

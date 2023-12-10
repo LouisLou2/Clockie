@@ -1,9 +1,6 @@
-import 'package:clockie/repository/chosen_city_box.dart';
-import 'package:clockie/service/provider/world_clock_provider.dart';
 import 'package:clockie/service/stream/time_stream.dart';
 import 'package:clockie/util/time_util.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../constant/styles/app_styles.dart';
@@ -15,6 +12,7 @@ class WorldClockPage extends StatefulWidget {
 
   @override
   State<WorldClockPage> createState() => _WorldClockPageState();
+
 }
 class _WorldClockPageState extends State<WorldClockPage> with AutomaticKeepAliveClientMixin{
 
@@ -38,13 +36,13 @@ class _WorldClockPageState extends State<WorldClockPage> with AutomaticKeepAlive
               child: Image.asset("images/world_map.png",
                   color: AppStyles.softWhite),
             ),
-            Align(
+            const Align(
               alignment: Alignment.centerLeft,
               child:Padding(
-                padding: const EdgeInsets.only(left: 15),
+                padding: EdgeInsets.only(left: 15),
                 child: Row(
                   children: [
-                    const Icon(Icons.access_time,color: AppStyles.softWhite,size: 20,),
+                    Icon(Icons.access_time,color: AppStyles.softWhite,size: 20,),
                     Text(" Local Time",style: AppStyles.timeTxtStyleB,),
                   ],
                 )

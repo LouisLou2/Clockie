@@ -1,8 +1,5 @@
 import 'dart:async';
 class TimeStream {
-  static int prevMin=DateTime.now().minute;
-  static int prevHour=DateTime.now().hour;
-  static int prevDay=DateTime.now().day;
   static List<Stream?>streams=List.filled(4, null);
   ///0：sec，1：min，2：hour,3:day
   static Stream? getTimeStream(int intervalCode) {
@@ -25,10 +22,14 @@ class TimeStream {
         //这里加一个now.minute!=prevMin就是为了解决这个问题，这样再次进入应用，发现与之前记录的分钟不一样，也要发出刷新信号
         //不要以为小时和天就不用这么做了，因为这个问题也会出现在小时和天上，设想一下，我在跨越小时的时候仍把它放在后台，
         // 这样下一次刷新只能等到我再次进入应用起的下一个小时，这甚至更糟糕
+        //但是只判断分钟是不够的，万一出现13:13离去但是14:13回来的情况，这是时就失效了，
+        // 所以还要加上不断地进一步判断，但是还好，dart具有短路求值的特性，大概率在前面就已经判断出来了
+        //并且我想用户也不会太长时间将他放在后台，这只是万无一失的保险
+
+        //以上内容还是放弃了，现在我又想了一下，我还是不要在流上做手脚了，还是每次从后台进入前台时，刷新一下就好了，不要太复杂了，其实更多原因(因为判断条件太多了，浪费)
         callback = (timer) {
          var now=DateTime.now();
-          if (now.second == 0||now.minute!=prevMin) {
-            prevMin=now.minute;
+          if (now.second == 0) {
             controller.add(null);
           }
         };
@@ -36,8 +37,7 @@ class TimeStream {
       case 2:
         callback = (timer) {
           var now=DateTime.now();
-          if (now.minute == 0||now.hour!=prevHour) {
-            prevHour=now.hour;
+          if (now.minute == 0) {
             controller.add(null);
           }
         };
@@ -45,8 +45,7 @@ class TimeStream {
       case 3:
         callback = (timer) {
           var now=DateTime.now();
-          if (now.hour == 0||now.day!=prevDay) {
-            prevDay=now.day;
+          if (now.hour == 0) {
             controller.add(null);
           }
         };

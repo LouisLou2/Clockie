@@ -9,7 +9,12 @@ class WorldClockProvider extends ChangeNotifier{
   bool get isDictInited=>WorldTimeDict.hasInited;
   int get citiesNum => ChosenCityBox.box.length;
   bool isInitingData=false;//是否正在初始化数据，引入这个变量是因为由于异步的原因，initData()可能会被多次调用，所以只调用一次
+  bool resumeJustNow=false;//注意不是取决于值，而是取决于是否与之前的值不同，来代表是否是从后台切换到前台
 
+  void changeResumeJustNow(){
+    resumeJustNow=!resumeJustNow;
+    notifyListeners();
+  }
   Future<void>initData()async{
     if(isInitingData||_dataInited)return;
     await initWorldClockDict();
