@@ -37,7 +37,7 @@ Widget cityTimeCard(BuildContext context,String timezone) {
                     builder: (context, snapshot) => Text(TimeUtil.getMonthDayStr(timezone),
                         style: AppStyles.subTxtStyle),
                 ),
-                Text(' | ', style: AppStyles.subTxtStyle),
+                const Text(' | ', style: AppStyles.subTxtStyle),
                 Text(TimeUtil.getDiffStr(timezone),
                     style: AppStyles.subTxtStyle),
               ],

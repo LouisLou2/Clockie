@@ -2,7 +2,6 @@ import 'package:flutter/Material.dart';
 
 import '../../../constant/styles/app_styles.dart';
 import '../../../constant/widet_setting.dart';
-import '../../../dict/worldtime_dict.dart';
 import '../../../util/time_util.dart';
 
 Widget cityTimeSimpleCard({required String timezone, void Function(String zone) ?ontap}){
