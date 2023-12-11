@@ -1,6 +1,5 @@
 import 'package:clockie/cleanup_affairs.dart';
 import 'package:clockie/gui/page/stopwatch_page.dart';
-import 'package:clockie/service/life_cycle_recoder.dart';
 import 'package:clockie/service/navigation/navigator_manager.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:flutter/material.dart';
@@ -66,11 +65,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if(state == AppLifecycleState.resumed){
-      if(!LifeCycleRecoder.isFirstResume){
         PenthHouseProviders.worldClockProvider!.changeResumeJustNow();
-      }
-    }else if(state == AppLifecycleState.paused){
-      LifeCycleRecoder.isFirstResume = false;
     }
     super.didChangeAppLifecycleState(state);
   }
