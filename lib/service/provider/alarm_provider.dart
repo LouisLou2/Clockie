@@ -10,6 +10,9 @@ import '../alarm_manager.dart';
 
 class AlarmProvider extends ChangeNotifier {
   Alarm alarmNowSetting = Alarm.active();
+  Alarm? backupAlarmNow;
+  bool editingAlarm = false;//这里说明正在设置一个先前已经存在的闹钟，设置这个标着的目的就是，先前已经存在的闹钟，先要先把原来的取消掉
+  List<String>ids=[];//单独设置这个，为了防止修改闹钟导致全列表刷新
   get alarmList=>AlarmBox.box.values.toList(growable: false);
   bool dataInited=false;
   bool get isDataInited => dataInited;
@@ -23,6 +26,11 @@ class AlarmProvider extends ChangeNotifier {
     alarmNowSetting.changeDay(index);
     notifyListeners();
   }
+  void alarmNowSettingWithExisting(String id) {
+    alarmNowSetting = AlarmBox.box.get(id)!;
+    //backupAlarmNow = Alarm.copyWith(alarmNowSetting);
+    editingAlarm = true;
+  }
   ///这个不仅是将过期闹钟的状态改为false，还会将把应该Active的闹钟再次重新设置一遍，
   ///因为我发现我只要一离开应用（Swiped）,再次进入，即使闹钟应该是Active的，也不会触发，所以再次设置一遍
   ///如果这个问题解决了，那么这个方法就不必那么麻烦了
@@ -31,6 +39,7 @@ class AlarmProvider extends ChangeNotifier {
     DateFormat formatter=DateFormat(DateFormatter.DATE_TIME_FORMAT);
     DateTime? that;
     for(var entry in AlarmBox.box.toMap().entries) {
+      ids.add(entry.key);
       if(entry.value.pickNum!=0){
         AlarmManager.smartSetAlarmWithExistingId(entry.value, InvokeHandler.notifyAndSmartTurnOff);
         continue;
@@ -49,14 +58,25 @@ class AlarmProvider extends ChangeNotifier {
     alarmNowSetting.desc = desc;
   }
   void submitAlarm() async {
+    int? index;
+    if(editingAlarm) {
+      deleteAlarmWithouNotify(alarmNowSetting.id);
+      index=ids.indexOf(alarmNowSetting.id);
+    }
     bool isOnce=alarmNowSetting.pickNum==0;
     if(isOnce) {
       TimeUtil.equipMeanTime(alarmNowSetting);
     }
     String id=await AlarmManager.smartSetAlarm(alarmNowSetting,InvokeHandler.notifyAndSmartTurnOff);
     alarmNowSetting.id = id;
+    if(editingAlarm) {
+      ids[index!]=id;
+    } else {
+      ids.add(id);
+    }
     AlarmBox.box.put(id, alarmNowSetting);
     alarmNowSetting=Alarm.active();//重置,如果仍在原来的alarmNowSetting上修改，会影响到alarmList里的变量
+    editingAlarm=false;//不要忘了把这个标志位重置
     notifyListeners();
   }
   Future<void> initData() async {
@@ -66,17 +86,21 @@ class AlarmProvider extends ChangeNotifier {
     filterActiveState();
     dataInited=true;
     isInitingData=false;
+    editingAlarm=false;
     notifyListeners();
   }
   void deleteItemById(String id) {
-    if(!(AlarmBox.box.get(id)!.isActive)){
+    deleteAlarmWithouNotify(id);
+    notifyListeners();
+  }
+  void deleteAlarmWithouNotify(String id) {
+    if(AlarmBox.box.get(id)!.isActive){
       List<int> ids=alarmKeyParse(id);
       for(var id in ids) {
         AlarmManager.cancelAlarm(id);
       }
     }
     AlarmBox.box.delete(id);
-    notifyListeners();
   }
   bool turnOffAlarm(String id){
     if(!turnOffAlarmWithoutNotify(id))return false;

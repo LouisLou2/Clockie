@@ -39,71 +39,76 @@ Widget dayOfWeekRow(String id){
     ),
   );
 }
-Widget alarmCard(String id,BuildContext context) {
+Widget alarmCard(int index,BuildContext context) {
   AlarmProvider prov = Provider.of<AlarmProvider>(context,listen: false);
-  return Padding(
-    padding: const EdgeInsets.only(left: 12,right: 12,bottom: 12),
-    child: InkWell(
-      borderRadius: AppStyles.genericCardBorderRadius,
-      onLongPress: () => prov.deleteItemById(id),
-      child: Ink(
-        height: 160,
-        width: ScreenUtil().screenWidth/2,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppStyles.cardColor,
-          borderRadius: AppStyles.genericCardBorderRadius,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Align(
-              alignment: AlignmentDirectional.topStart,
-              child: Selector<AlarmProvider,String>(
-                selector: (context,provider) => provider.getAlarm(id).name,
-                builder: (context,name,child) => Text(name,style: AppStyles.subTxtStyle)
-              )
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Selector<AlarmProvider,String>(
-                  selector: (context,provider) => provider.getAlarm(id).timeStr,
-                  builder: (context,timeStr,child) => Text(timeStr,style: AppStyles.numberStyle)
-                ),
-                Selector<AlarmProvider,bool>(
-                  selector: (context,provider) => provider.getAlarm(id).isActive,
-                  builder: (context,isActive,child) => CupertinoSwitch(
-                    activeColor: AppStyles.blueColor,
-                    trackColor: AppStyles.backGroundColor,
-                    value: isActive, onChanged: (value){
+  return
+  Selector<AlarmProvider,String>(
+    selector: (context,provider) => provider.ids[index],
+    builder: (context,id,child) => Padding(
+      padding: const EdgeInsets.only(left: 12,right: 12,bottom: 12),
+      child: InkWell(
+        borderRadius: AppStyles.genericCardBorderRadius,
+        onTap: () => Navigator.pushNamed(context, '/alarm/add',arguments: id),
+        onLongPress: () => prov.deleteItemById(id),
+        child: Ink(
+          height: 160,
+          width: ScreenUtil().screenWidth/2,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppStyles.cardColor,
+            borderRadius: AppStyles.genericCardBorderRadius,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Align(
+                  alignment: AlignmentDirectional.topStart,
+                  child: Selector<AlarmProvider,String>(
+                      selector: (context,provider) => provider.getAlarm(id).name,
+                      builder: (context,name,child) => Text(name,style: AppStyles.subTxtStyle)
+                  )
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Selector<AlarmProvider,String>(
+                      selector: (context,provider) => provider.getAlarm(id).timeStr,
+                      builder: (context,timeStr,child) => Text(timeStr,style: AppStyles.numberStyle)
+                  ),
+                  Selector<AlarmProvider,bool>(
+                    selector: (context,provider) => provider.getAlarm(id).isActive,
+                    builder: (context,isActive,child) => CupertinoSwitch(
+                        activeColor: AppStyles.blueColor,
+                        trackColor: AppStyles.backGroundColor,
+                        value: isActive, onChanged: (value){
                       AlarmProvider prov = Provider.of<AlarmProvider>(context,listen: false);
                       prov.changeAlarmActive(id);
                     }
+                    ),
                   ),
-                ),
-              ],
-            ),
-            dayOfWeekRow(id),
-            Selector<AlarmProvider,int>(
-              selector: (context,provider) => provider.getAlarm(id).pickNum,
-              builder: (context,pickNum,child){
-                String? value;
-                switch(pickNum){
-                  case 0:
-                    value='Once';
-                    break;
-                  case 7:
-                    value='Everyday';
-                    break;
-                  default:
-                    value='$pickNum Days';
-                    break;
-                }
-                return Text(value,style: AppStyles.subTxtStyle);
-              }
-            ),
-          ],
+                ],
+              ),
+              dayOfWeekRow(id),
+              Selector<AlarmProvider,int>(
+                  selector: (context,provider) => provider.getAlarm(id).pickNum,
+                  builder: (context,pickNum,child){
+                    String? value;
+                    switch(pickNum){
+                      case 0:
+                        value='Once';
+                        break;
+                      case 7:
+                        value='Everyday';
+                        break;
+                      default:
+                        value='$pickNum Days';
+                        break;
+                    }
+                    return Text(value,style: AppStyles.subTxtStyle);
+                  }
+              ),
+            ],
+          ),
         ),
       ),
     ),

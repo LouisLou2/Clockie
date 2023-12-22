@@ -1,3 +1,4 @@
+import 'package:clockie/gui/widget/world_clock/analog_clock_vault.dart';
 import 'package:clockie/service/stream/time_stream.dart';
 import 'package:clockie/util/time_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,17 +33,18 @@ class _WorldClockPageState extends State<WorldClockPage> with AutomaticKeepAlive
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(10),
-              child: Image.asset("images/world_map.png",
-                  color: AppStyles.softWhite),
+              padding: const EdgeInsets.only(top: 30),
+              child:AnalogClockVault.getBlackAnalogClock(),
             ),
+              // child: Image.asset("images/world_map.png",
+              //     color: AppStyles.softWhite),
             const Align(
               alignment: Alignment.centerLeft,
               child:Padding(
                 padding: EdgeInsets.only(left: 15),
                 child: Row(
                   children: [
-                    Icon(Icons.access_time,color: AppStyles.softWhite,size: 20,),
+                    // Icon(Icons.access_time,color: AppStyles.softWhite,size: 20,),
                     Text(" Local Time",style: AppStyles.timeTxtStyleB,),
                   ],
                 )

@@ -38,7 +38,7 @@ class Alarm {
     desc='';
     meantTime='';
   }
-  Alarm({required this.id,required this.name,required this.hour,required this.min,required this.isActive,required List<bool>days,required this.desc,required this.meantTime}){
+  Alarm({required this.id,required this.name,required this.hour,required this.min,required this.isActive,required List<bool>days,required int pickNum,required this.desc,required this.meantTime}){
     pickNum=0;
     for(int i=0;i<days.length;++i){
       ++pickNum;
@@ -74,5 +74,18 @@ class Alarm {
   }
   String get timeStr {
     return '${hour >= 10 ? '$hour' : '0$hour'}:${min >= 10 ? '$min' : '0$min'}';
+  }
+  static copyWith(Alarm alarm){
+    return Alarm(
+      id: alarm.id,
+      name: alarm.name,
+      hour: alarm.hour,
+      min: alarm.min,
+      isActive: alarm.isActive,
+      pickNum: alarm.pickNum,
+      days: List.from(alarm.days),
+      desc: alarm.desc,
+      meantTime: alarm.meantTime,
+    );
   }
 }

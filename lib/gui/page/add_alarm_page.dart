@@ -1,7 +1,4 @@
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:clockie/dict/date_dict.dart';
-import 'package:clockie/service/alarm_manager.dart';
-import 'package:clockie/service/notification/notification_vault.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -20,10 +17,11 @@ class AddAlarmPage extends StatefulWidget
 }
 
 class _AddAlarmPageState extends State<AddAlarmPage> {
-  TextEditingController alarmNameController = TextEditingController();
-  TextEditingController alarmDescController = TextEditingController();
-  Widget _dayPicker() {
-    final provider = Provider.of<AlarmProvider>(context);
+  late TextEditingController alarmNameController;
+  late TextEditingController alarmDescController;
+
+  Widget _dayPicker(String? id) {
+    final provider = Provider.of<AlarmProvider>(context, listen: false); //当前节点不订阅，只是获取
     return SizedBox(
       height: 36,
       child: GridView.builder(
@@ -32,24 +30,26 @@ class _AddAlarmPageState extends State<AddAlarmPage> {
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 40.w, mainAxisSpacing: 10, mainAxisExtent: 40),
         itemCount: 7,
-        itemBuilder: (context, index) =>
-            InkWell(
+        itemBuilder: (context, index) =>Selector<AlarmProvider,bool>(
+            selector:(context,provider) => provider.alarmNowSetting.days[index],
+            builder:(context,isSelect,child)=>InkWell(
               onTap: () => provider.pickDay(index),
               child: AnimatedContainer(
                 width: 36,
                 duration: const Duration(milliseconds: 150),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    color: provider.alarmNowSetting.days[index] ?
+                    color: isSelect ?
                     AppStyles.blueColor : Colors.transparent
                 ),
                 child: Center(
                   child: Text(DateDict.shortDays[index],
-                      style: provider.alarmNowSetting.days[index] ?
+                      style: isSelect ?
                       AppStyles.darkTxtStyle : AppStyles.subTxtStyle),
                 ),
               ),
             ),
+        ),
       ),
     );
   }
@@ -69,15 +69,30 @@ class _AddAlarmPageState extends State<AddAlarmPage> {
     provider.submitAlarm();
     Navigator.pop(context);
   }
-
+  _initTextEditingController({String? name, String? desc}) {
+    alarmNameController = TextEditingController(text: name??'');
+    alarmDescController = TextEditingController(text: desc??'');
+  }
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AlarmProvider>(context, listen: false); //当前节点不订阅，只是获取
+    final id = ModalRoute.of(context)!.settings.arguments as String?;
+    if(id!=null){
+      provider.alarmNowSettingWithExisting(id);
+      _initTextEditingController(
+          name:provider.alarmNowSetting.name,
+          desc:provider.alarmNowSetting.desc
+      );
+    }else{
+      _initTextEditingController();
+    }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const AlarmTimePicker(),
+          provider.editingAlarm?AlarmTimePicker(initialHour: provider.alarmNowSetting.hour,initialMinute: provider.alarmNowSetting.min):AlarmTimePicker(),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -94,7 +109,7 @@ class _AddAlarmPageState extends State<AddAlarmPage> {
                     icon: const Icon(Icons.calendar_month_outlined,
                         color: AppStyles.softWhite))
               ]),
-              _dayPicker(),
+              _dayPicker(id),
               TextField(
                 style: const TextStyle(color: AppStyles.softWhite),
                 controller: alarmNameController,

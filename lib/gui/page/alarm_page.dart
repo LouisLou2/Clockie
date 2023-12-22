@@ -2,12 +2,9 @@
 import 'package:clockie/gui/widget/generic/loading_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant/styles/app_styles.dart';
-import '../../model/alarm_model.dart';
-import '../../repository/alarm_box.dart';
 import '../../service/provider/alarm_provider.dart';
 import '../widget/alarm/alarm_card.dart';
 import '../widget/generic/empty_massage.dart';
@@ -29,11 +26,11 @@ class _AlarmPageState extends State<AlarmPage> with AutomaticKeepAliveClientMixi
         selector: (context,provider) => provider.alarmNum,
         builder: (BuildContext context, int alarmNum, Widget? child){
           if(alarmNum==0)return const EmptyMessage(txt: "No Alarm");
-          AlarmProvider prov=Provider.of<AlarmProvider>(context,listen:false);
-          List<Alarm>alarmList=prov.alarmList;
+          //AlarmProvider prov=Provider.of<AlarmProvider>(context,listen:false);
+          //List<String>alarmIdList=prov.ids;
           return ListView.builder(
             itemCount: alarmNum,
-            itemBuilder: (context, index) => alarmCard(alarmList[index].id, context),
+            itemBuilder: (context, index) => alarmCard(index, context),
           );
         }
       )

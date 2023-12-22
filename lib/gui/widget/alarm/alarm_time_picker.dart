@@ -5,18 +5,26 @@ import '../../../service/provider/alarm_provider.dart';
 import '../generic/time_picker.dart';
 
 class AlarmTimePicker extends StatefulWidget {
-  const AlarmTimePicker({super.key});
 
+  const AlarmTimePicker({super.key,this.initialHour,this.initialMinute});
+  final int? initialHour;
+  final int? initialMinute;
   @override
   State<AlarmTimePicker> createState() => _AlarmTimePickerState();
 }
 
 class _AlarmTimePickerState extends State<AlarmTimePicker> {
 
-  final FixedExtentScrollController _hourController = FixedExtentScrollController(initialItem: DateTime.now().hour);
-  final FixedExtentScrollController _minuteController = FixedExtentScrollController(initialItem: DateTime.now().minute);
+  late FixedExtentScrollController _hourController;
+  late FixedExtentScrollController _minuteController;
   double itemExtent = 80;
-
+  @override
+  initState() {
+    super.initState();
+    _hourController = FixedExtentScrollController(initialItem: widget.initialHour??DateTime.now().hour);
+    _minuteController = FixedExtentScrollController(initialItem: widget.initialMinute??DateTime.now().minute);
+    _initAlarm();
+  }
   //逻辑方法
 
   _pickTime(int? hourValue, int? minuteValue) {
@@ -29,12 +37,6 @@ class _AlarmTimePickerState extends State<AlarmTimePicker> {
     final provider = Provider.of<AlarmProvider>(context,listen: false);
     provider.alarmNowSetting.hour = _hourController.initialItem;
     provider.alarmNowSetting.min = _minuteController.initialItem;
-  }
-  //生命周期方法
-  @override
-  void initState() {
-    super.initState();
-    _initAlarm();
   }
   @override
   Widget build(BuildContext context)  =>
