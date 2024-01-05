@@ -1,76 +1,44 @@
-import 'package:flutter/Material.dart';
-import 'package:flutter/cupertino.dart';
-import '../../../constant/styles/style.dart';
-
-Widget getFloatingButton({required bool theme,required void Function() onPressd,required Icon icon,String?toolTip,required bool circle}){
-  return FloatingActionButton(
-      highlightElevation: 5,
-      onPressed: onPressd,
-      shape:circle?BorderEnum.circleLike:BorderEnum.roundedRect,
-      foregroundColor: Colors.black,
-      backgroundColor: Colors.white70,
-      tooltip: toolTip,
-      child: icon,
-  );
-}
-Widget getRoundedButton({required bool theme,required void Function() onPressd,required Icon icon,required Color iconColor,double? iconSize}){
-  return ElevatedButton(
-    onPressed: onPressd,
-    style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(
-            Colors.white
-        ),
-        elevation: MaterialStateProperty.all<double>(
-            5
-        ),
-        surfaceTintColor: MaterialStateProperty.all<Color>(
-            iconColor!=Colors.black?iconColor:Colors.white
-        ),
-        minimumSize: MaterialStateProperty.all<Size>(
-          const Size(70,70),
-        ),
-        iconSize: MaterialStateProperty.all<double>(
-            iconSize??45
-        ),
-        iconColor: MaterialStateProperty.all<Color>(
-            iconColor
-        ),
-        shape: MaterialStateProperty.all<CircleBorder>(
-          const CircleBorder(),
-        )
+import 'package:clockie/constant/styles/app_styles.dart';
+import 'package:clockie/constant/widet_setting.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+Widget button(void Function() press, Color color, String txt) {
+  return InkWell(
+    onTap: press,
+    borderRadius: BorderRadius.circular(WidgetSetting.buttonRadius),
+    child: Ink(
+      height: 40.h,
+      width: 140.w,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(WidgetSetting.buttonRadius),
+      ),
+      child: Center(child: Text(txt,style: AppStyles.buttonTxt)),
     ),
-    child: icon,
   );
 }
-Widget playIconButton({required bool theme,required void Function() onPressd}){
-  return getRoundedButton(
-      onPressd: onPressd,
-      theme:theme,
-      icon:const Icon(Icons.play_arrow_rounded),
-      iconColor: theme?Colors.blue:Colors.cyan
+
+Widget txtButton(Function() press,String txt,TextStyle style) => InkWell(
+  onTap: press,
+  borderRadius: BorderRadius.circular(25),
+  child: Ink(
+      height: 40,
+      width: ScreenUtil().screenWidth/3,
+      child: Center(child: Text(txt,style: style))
+  ),
+);
+Widget buttonExecuteStyle({required Function() press,String? label}){
+  return button(
+    press,AppStyles.blueColor, label ?? "Start"
   );
 }
-Widget pauseIconButton({required bool theme,required void Function() onPressd}){
-  return getRoundedButton(
-    onPressd: onPressd,
-    theme:theme,
-    icon:const Icon(Icons.pause),
-    iconColor: Colors.red
+Widget buttonMaimStyle({required Function() press,String? label}){
+  return button(
+    press,Colors.red,label ??'Pause'
   );
 }
-Widget resetIconButton({required bool theme,required void Function() onPressd}){
-  return getRoundedButton(
-    onPressd: onPressd,
-    theme:theme,
-    icon:const Icon(Icons.square_rounded,size: 36,),
-    iconColor: Colors.grey,
-  );
-}
-Widget lapIconButton({required bool theme,required void Function() onPressd}){
-  return getRoundedButton(
-      onPressd: onPressd,
-      theme:theme,
-      icon:const Icon(CupertinoIcons.pen),
-      iconColor: Colors.blue
+Widget buttonQuietStyle({required Function() press,String? label}){
+  return button(
+    press,AppStyles.softWhite,label??'Reset'
   );
 }

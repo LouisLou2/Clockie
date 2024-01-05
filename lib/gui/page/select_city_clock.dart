@@ -1,4 +1,5 @@
 import 'package:clockie/dict/worldtime_dict.dart';
+import 'package:clockie/gui/widget/generic/custom_alert.dart';
 import 'package:clockie/gui/widget/generic/loading_widget.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +44,9 @@ Widget _cityList(BuildContext context) {
               timezone: diffList[index],
               theme: value,
               ontap: (String zone) {
-                wprov.selectCity(zone);
+                if(wprov.selectCity(zone)){
+                  showSimpleSnackBar(context, 'The City Has Already Been Added');
+                }
                 Navigator.pop(context);
               },
             )

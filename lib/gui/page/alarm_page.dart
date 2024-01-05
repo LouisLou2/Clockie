@@ -1,5 +1,5 @@
 //create a normal page, no matter what the page is, because this is a unfinished page , I'll do it later
-import 'package:clockie/gui/widget/generic/button.dart';
+import 'package:clockie/gui/widget/generic/custom_button.dart';
 import 'package:clockie/gui/widget/generic/custom_alert.dart';
 import 'package:clockie/gui/widget/generic/loading_widget.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
@@ -77,10 +77,20 @@ class _AlarmPageState extends State<AlarmPage> with AutomaticKeepAliveClientMixi
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 10, 20, 0),
             child: IconButton(
-                onPressed: () => PenthHouseProviders.alarmProvider!.changeSelecting(),
-                icon: const Icon(CupertinoIcons.pen,size: 30,)
+              onPressed: (){
+                bool selecting=PenthHouseProviders.alarmProvider!.selecting;
+                if(!selecting&&PenthHouseProviders.alarmProvider!.alarmNum==0){
+                  showSimpleSnackBar(context, 'No Alarm to Be Edited');
+                  return;
+                }
+                PenthHouseProviders.alarmProvider!.changeSelecting();
+              },
+              icon: Selector<AlarmProvider,bool>(
+                selector: (context,prov)=>prov.selecting,
+                builder: (context,value,child)=>value?const Icon(CupertinoIcons.check_mark,size: 30,):const Icon(CupertinoIcons.pen,size: 30,)
+                ),
+              ),
             ),
-          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 10, 20, 0),
             child: IconButton(

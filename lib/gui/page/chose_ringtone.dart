@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:clockie/constant/styles/app_styles.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:clockie/service/provider/resource_provider.dart';

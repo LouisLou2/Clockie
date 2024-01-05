@@ -3,9 +3,9 @@ import 'package:flutter/Material.dart';
 import 'package:flutter/cupertino.dart';
 
 class SingleSection extends StatelessWidget{
-  String title;
+  final String title;
   final List<Widget>children;
-  SingleSection({super.key,required this.title,required this.children});
+  const SingleSection({super.key,required this.title,required this.children});
 
   @override
   Widget build(BuildContext context) {

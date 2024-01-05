@@ -2,7 +2,6 @@ import 'package:clockie/constant/styles/app_styles.dart';
 import 'package:clockie/service/provider/stopwatch_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:clockie/model/base_time.dart';
 class StopWatchWidget extends StatefulWidget {
   const StopWatchWidget({super.key});
 

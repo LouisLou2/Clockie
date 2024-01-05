@@ -1,10 +1,9 @@
 import 'package:clockie/service/provider/timer_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../service/provider/theme_provider.dart';
-import '../widget/generic/button.dart';
+import '../widget/generic/custom_button.dart';
 import '../widget/timer/timer_indicator.dart';
 import '../widget/timer/timer_time_picker.dart';
 

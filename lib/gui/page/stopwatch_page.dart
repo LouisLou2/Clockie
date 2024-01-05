@@ -1,4 +1,4 @@
-import 'package:clockie/gui/widget/generic/button.dart';
+import 'package:clockie/gui/widget/generic/custom_button.dart';
 import 'package:clockie/gui/widget/stopwatch/digit_clock.dart';
 import 'package:clockie/gui/widget/stopwatch/lap_times.dart';
 import 'package:clockie/service/provider/stopwatch_provider.dart';

@@ -22,6 +22,7 @@ class AlarmProvider extends ChangeNotifier {
   bool get isDataInited => dataInited;
   int get alarmNum => ids.length;
   bool isInitingData=false;//是否正在初始化数据，引入这个变量是因为由于异步的原因，initData()可能会被多次调用，所以只调用一次
+
   void giveupEditing(){
     editingAlarm=false;
   }
@@ -133,7 +134,7 @@ class AlarmProvider extends ChangeNotifier {
     }
     AlarmBox.box.put(id, alarmNowSetting);
     alarmNowSetting=Alarm.active();//重置,如果仍在原来的alarmNowSetting上修改，会影响到alarmList里的变量
-    editingAlarm=false;//不要忘了把这个标志位重置
+    if(editingAlarm)editingAlarm=false;//不要忘了把这个标志位重置
     notifyListeners();
   }
   Future<void> initData() async {
@@ -146,11 +147,6 @@ class AlarmProvider extends ChangeNotifier {
     editingAlarm=false;
     notifyListeners();
   }
-  // void _deleteItemById(String id) {
-  //   deleteAlarmWithouNotify(id);
-  //   notifyListeners();
-  // }
-
   //暂时废弃
   void ___deleteItemByIndex(int ind){
     _deleteAlarmWithouNotify(ind);

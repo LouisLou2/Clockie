@@ -41,15 +41,11 @@ class AlarmManagerOld{
   static DateTime _getFirstInvokeTimeWithWeekday(HourMin time,int targetWeekday){
     upadateNowTime();
     DateTime aTime = DateTime(nowtime.year, nowtime.month, nowtime.day, time.hour, time.min);
-    print(aTime.weekday);
-    print(nowtime.weekday);
     if(aTime.weekday<targetWeekday||aTime.weekday==targetWeekday&&nowtime.isBefore(aTime)){
       aTime = aTime.add(Duration(days: targetWeekday-aTime.weekday));
-      print(aTime);
       return aTime;
     }
     aTime = aTime.add(Duration(days: 7-aTime.weekday+targetWeekday));
-    print(aTime);
     return aTime;
   }
 

@@ -23,9 +23,13 @@ class WorldClockProvider extends ChangeNotifier{
     isInitingData=false;
     notifyListeners();
   }
-  void selectCity(String timezone){
+  bool selectCity(String timezone){
+    if(ChosenCityBox.box.containsKey(timezone)){
+      return false;
+    }
     ChosenCityBox.box.put(timezone, true);
     notifyListeners();
+    return true;
   }
   void removeCity(String timezone){
     ChosenCityBox.box.delete(timezone);

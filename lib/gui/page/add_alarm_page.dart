@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../constant/styles/app_styles.dart';
 import '../../service/provider/alarm_provider.dart';
 import '../widget/alarm/alarm_time_picker.dart';
-import '../widget/button.dart';
+import '../widget/generic/button.dart';
 
 class AddAlarmPage extends StatefulWidget {
   const AddAlarmPage({super.key});
@@ -56,6 +56,7 @@ class _AddAlarmPageState extends State<AddAlarmPage> {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           buttonQuietStyle(press:  (){
+            //这个giveupEditing本来是给正在编辑的闹钟使用的，表示放弃编辑，但就这吧，即使是先闹钟cancel也没事，就赋值个false，没关系
             PenthHouseProviders.alarmProvider!.giveupEditing();
             Navigator.pop(context);
           }, label:"Cancel"),
