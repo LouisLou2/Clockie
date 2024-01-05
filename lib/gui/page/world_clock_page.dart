@@ -1,8 +1,11 @@
+import 'package:clockie/constant/styles/style.dart';
 import 'package:clockie/gui/widget/world_clock/analog_clock_vault.dart';
 import 'package:clockie/service/stream/time_stream.dart';
+import 'package:clockie/service/provider/theme_provider.dart';
 import 'package:clockie/util/time_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../constant/styles/app_styles.dart';
 import '../widget/generic/clock_now.dart';
@@ -19,55 +22,63 @@ class _WorldClockPageState extends State<WorldClockPage> with AutomaticKeepAlive
 
   @override
   bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppStyles.backGroundColor,
-        elevation: 0,
-        toolbarHeight: 350,
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
+  Widget barWidgetSet(){
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
               padding: const EdgeInsets.only(top: 30),
-              child:AnalogClockVault.getBlackAnalogClock(),
-            ),
-              // child: Image.asset("images/world_map.png",
-              //     color: AppStyles.softWhite),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child:Padding(
+              child:Selector<ThemeProvider,bool>(
+                selector: (context,prov)=>prov.curTheme,
+                builder:(context,value,child)=>AnalogClockVault.getBlackAnalogClock(
+                  AnalogClockColorScheme.getHourHand(value),
+                  AnalogClockColorScheme.getMinSecHand(value),
+                  AnalogClockColorScheme.getBorder(value),
+                  AnalogClockColorScheme.getTick(value),
+                  AnalogClockColorScheme.getNumber(value),
+                ),
+              )
+          ),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child:Padding(
                 padding: EdgeInsets.only(left: 15),
                 child: Row(
                   children: [
-                    // Icon(Icons.access_time,color: AppStyles.softWhite,size: 20,),
                     Text(" Local Time",style: AppStyles.timeTxtStyleB,),
                   ],
                 )
-              ),
             ),
-            ListTile(
-              // leading: const Icon(Icons.access_time,color: AppStyles.softWhite,size: 37.5,),
-              title: const ClockNowWidget(),
-              subtitle: StreamBuilder(
-                stream: TimeStream.getTimeStream(3),
-                initialData: TimeUtil.getNativeDateStr(),
-                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot)=>Text(TimeUtil.getNativeDateStr(),style: AppStyles.subTxtStyle),
-              ),
-              trailing: IconButton(onPressed:() {
-                  Navigator.pushNamed(context, '/world_clock/select');
-                },
-                icon: const Icon(Icons.add,color: AppStyles.softWhite)
-              ),
+          ),
+          ListTile(
+            title: const ClockNowWidget(),
+            subtitle: StreamBuilder(
+              stream: TimeStream.getTimeStream(3),
+              initialData: TimeUtil.getNativeDateStr(),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot)=>Text(TimeUtil.getNativeDateStr(),style: AppStyles.subTxtStyle),
             ),
-          ],
-        ),
+            trailing: IconButton(onPressed:() {
+              Navigator.pushNamed(context, '/world_clock/select');},
+              icon: const Icon(Icons.add),
+            ),
+          ),
+        ]
+    );
+  }
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Scaffold(
+      appBar:AppBar(
+        surfaceTintColor: Colors.white54,
+        elevation: 0,
+        toolbarHeight: 350,
+        title:barWidgetSet(),
       ),
-      body: const CityTimeList(),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(vertical: 10),
+        child:CityTimeList(),
+      ),
     );
   }
 }

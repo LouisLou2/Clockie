@@ -10,8 +10,10 @@ Widget timeEleTxt(int t) {
         style: AppStyles.numberStyle),
   );
 }
-Widget timeSeperator() => Text(SymbolConstant.timeSeparator, textAlign: TextAlign.center,
-    style: AppStyles.numberStyle);
+Widget timeSeperator() => const Text(
+    SymbolConstant.timeSeparator, textAlign: TextAlign.center,
+    style: AppStyles.numberStyle
+);
 Widget oneTimePicker({
   required FixedExtentScrollController controller,
   required int itemCount,

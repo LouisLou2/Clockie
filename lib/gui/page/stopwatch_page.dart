@@ -1,11 +1,11 @@
-import 'package:clockie/constant/styles/app_styles.dart';
+import 'package:clockie/gui/widget/generic/button.dart';
 import 'package:clockie/gui/widget/stopwatch/digit_clock.dart';
 import 'package:clockie/gui/widget/stopwatch/lap_times.dart';
 import 'package:clockie/service/provider/stopwatch_provider.dart';
+import 'package:clockie/service/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:clockie/gui/widget/button.dart';
 class StopwatchPage extends StatefulWidget {
   const StopwatchPage({super.key});
 
@@ -18,7 +18,7 @@ class _StopwatchPageState extends State<StopwatchPage> with AutomaticKeepAliveCl
   bool get wantKeepAlive => true;
 
   Widget _stopWatchButtons() {
-    StopWatchProvider prov = Provider.of<StopWatchProvider>(context, listen: false);
+    StopWatchProvider sprov = Provider.of<StopWatchProvider>(context, listen: false);
 
     return Selector<StopWatchProvider, bool>(
         selector: (context, provider) => provider.isRunning,
@@ -29,24 +29,54 @@ class _StopwatchPageState extends State<StopwatchPage> with AutomaticKeepAliveCl
             builder: (BuildContext context, bool timerActive, Widget?child) =>
             timerActive ?
             Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  buttonMaimStyle(press: () => prov.pause(), label: 'Pause'),
-                  buttonQuietStyle(press: () => prov.addLap(), label: 'Lap'),
-                ]
+                  Selector<ThemeProvider,bool>(
+                  selector: (context,prov)=>prov.curTheme,
+                  builder:(context,value,child)=>pauseIconButton(
+                    theme: value,
+                    onPressd: () => sprov.pause(),
+                  ),
+                ),
+                Selector<ThemeProvider,bool>(
+                  selector: (context,prov)=>prov.curTheme,
+                  builder:(context,value,child)=>lapIconButton(
+                    theme: value,
+                    onPressd:() => sprov.addLap(),
+                  ),
+                ),
+              ]
             ) : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  buttonExecuteStyle(
-                      press: () => prov.start(), label: 'Continue'),
-                  buttonQuietStyle(press: () => prov.reset(), label: 'Reset'),
+                  Selector<ThemeProvider,bool>(
+                    selector: (context,prov)=>prov.curTheme,
+                    builder:(context,value,child)=>playIconButton(
+                      theme:value,
+                      onPressd: () => sprov.start(),
+                    ),
+                  ),
+                  Selector<ThemeProvider,bool>(
+                    selector: (context,prov)=>prov.curTheme,
+                    builder:(context,value,child)=>resetIconButton(
+                      theme: value,
+                      onPressd: () => sprov.reset(),
+                    ),
+                  ),
                 ]
             )
         )
         : Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            buttonExecuteStyle(press: () => prov.start(), label: 'Start'),
+            Selector<ThemeProvider,bool>(
+              selector: (context,prov)=>prov.curTheme,
+              builder:(context,value,child)=>playIconButton(
+                theme: value,
+                onPressd: () => sprov.start(),
+              ),
+            ),
+            //buttonExecuteStyle(press: () => prov.start(), label: 'Start'),
           ]
         )
     );
@@ -66,15 +96,17 @@ class _StopwatchPageState extends State<StopwatchPage> with AutomaticKeepAliveCl
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            const SizedBox(
+              height: 200,
+            ),
             const StopWatchWidget(),
             lapsListWidget(),
           ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.transparent,
         elevation: 0,
         height: 100.h,
         child: Align(alignment: Alignment.topCenter,child: _stopWatchButtons()),

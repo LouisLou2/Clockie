@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:clockie/constant/widet_setting.dart';
+import 'package:clockie/gui/widget/generic/custom_alert.dart';
+import 'package:clockie/service/notification/notification_vault.dart';
 import 'package:flutter/Material.dart';
 
-import '../notification/notification_service.dart';
-
 class TimerProvider extends ChangeNotifier{
+  BuildContext? timerPageContext;
   int _hour=0;
   int _min=0;
   int _sec=0;
@@ -31,13 +32,17 @@ class TimerProvider extends ChangeNotifier{
       notifyListeners();
       return;
     }
-    NotificationService.showNotification(title: "Timer", body: "The timer has expired");
-    _timer?.cancel();
-    _isRunning=false;
-    notifyListeners();
+    if(timerPageContext!=null) {
+      NotificationVault.showTimeExpiryNotification(timerPageContext!);
+    }
+    reset();
   }
-  void start(){
-    if(_hour==0&&_min==0&&_sec==0) return;
+  void start(BuildContext context){
+    timerPageContext=context;
+    if(_hour==0&&_min==0&&_sec==0){
+      showSimpleSnackBar(context,'Please select time');
+      return;
+    }
     _isRunning=true;
     _milliSum=_hour*3600+_min*60+_sec;
     _milliSum*=1000;

@@ -21,7 +21,6 @@ class NotificationService {
         criticalAlerts: true,
       )
     ],
-      debug: true,
     );
 
     await AwesomeNotifications().isNotificationAllowed().then(
@@ -92,7 +91,7 @@ class NotificationService {
         actionType: actionType,
         notificationLayout: notificationLayout,
         summary: summary,
-        category: category,
+        category: NotificationCategory.Alarm,
         payload: payload,
         bigPicture: bigPicture,
       ),

@@ -21,7 +21,7 @@ class TimeUtil{
       return '${diff.abs()} Hours ${diff>0?'Ahead':'Behind'}';
     }
     else {
-      return 'same time';
+      return 'Same Time';
     }
   }
   static getGMTStr(String timezone){

@@ -1,4 +1,5 @@
 import 'package:clockie/service/provider/world_clock_provider.dart';
+import 'package:clockie/service/provider/theme_provider.dart';
 import 'package:flutter/Material.dart';
 import 'package:provider/provider.dart';
 import 'package:clockie/gui/widget/generic/loading_widget.dart';
@@ -23,8 +24,12 @@ class _CityTimeListState extends State<CityTimeList> {
             builder:(context,citiesNum,child){
               List<String> timezoneList = prov.timezonesList;
               return ListView.builder(
+                shrinkWrap: true,
                 itemCount: citiesNum,
-                itemBuilder: (context,index) => cityTimeCard(context,timezoneList[index]),
+                itemBuilder: (context,index) => Selector<ThemeProvider,bool>(
+                  selector: (context,prov)=>prov.curTheme,
+                  builder: (context,value,child)=>getCityTimeCard(context, timezoneList[index], value)
+                )
               );
             }
         )

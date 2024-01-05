@@ -1,4 +1,5 @@
 import 'package:clockie/dict/date_dict.dart';
+import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -8,8 +9,7 @@ import '../../service/provider/alarm_provider.dart';
 import '../widget/alarm/alarm_time_picker.dart';
 import '../widget/button.dart';
 
-class AddAlarmPage extends StatefulWidget
-{
+class AddAlarmPage extends StatefulWidget {
   const AddAlarmPage({super.key});
 
   @override
@@ -44,8 +44,7 @@ class _AddAlarmPageState extends State<AddAlarmPage> {
                 ),
                 child: Center(
                   child: Text(DateDict.shortDays[index],
-                      style: isSelect ?
-                      AppStyles.darkTxtStyle : AppStyles.subTxtStyle),
+                      style: isSelect ? AppStyles.darkTxtStyle : AppStyles.subTxtStyle),
                 ),
               ),
             ),
@@ -53,16 +52,17 @@ class _AddAlarmPageState extends State<AddAlarmPage> {
       ),
     );
   }
-
   Widget _operateButton() {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          buttonQuietStyle(press:  () => Navigator.pop(context), label:"Cancel"),
+          buttonQuietStyle(press:  (){
+            PenthHouseProviders.alarmProvider!.giveupEditing();
+            Navigator.pop(context);
+          }, label:"Cancel"),
           buttonExecuteStyle(press:() => _setAlarm(), label:"Save"),
         ]
     );
   }
-
   _setAlarm() {
     final provider = Provider.of<AlarmProvider>(context, listen: false); //当前节点不订阅，只是获取
     provider.setNowAlarmNameAndDesc(alarmNameController.text, alarmDescController.text);
@@ -86,54 +86,52 @@ class _AddAlarmPageState extends State<AddAlarmPage> {
     }else{
       _initTextEditingController();
     }
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        elevation: 0,
+        title: const Text("Set Alarm",style: AppStyles.h1Style,),
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          provider.editingAlarm?AlarmTimePicker(initialHour: provider.alarmNowSetting.hour,initialMinute: provider.alarmNowSetting.min):AlarmTimePicker(),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             padding: const EdgeInsets.symmetric(horizontal: 24),
             height: ScreenUtil().screenHeight / 3,
             decoration: BoxDecoration(
-                color: AppStyles.cardColor,
                 borderRadius: BorderRadius.circular(24)
             ),
-            child: Column(children: [
-              SizedBox(height: 24.h),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                const Text("Days", style: AppStyles.subTxtStyle),
-                IconButton(onPressed: () {},
-                    icon: const Icon(Icons.calendar_month_outlined,
-                        color: AppStyles.softWhite))
-              ]),
+            child: Column(
+                children: [
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Days", style: AppStyles.h2Style),
+                    IconButton(onPressed: () {},
+                        icon: const Icon(Icons.calendar_month_outlined,size:30))
+                  ]
+              ),
               _dayPicker(id),
               TextField(
-                style: const TextStyle(color: AppStyles.softWhite),
                 controller: alarmNameController,
                 decoration: const InputDecoration(
-                  labelStyle: TextStyle(color: AppStyles.softWhite),
+                  contentPadding: EdgeInsets.only(top:30,bottom: 10),
+                  labelStyle: AppStyles.h2Style,
                   labelText: 'Alarm Name', // 文本输入框上方的描述性标签
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: AppStyles.softWhite), // 修改下划线颜色
-                  ),
                 ),
               ),
               TextField(
-                style: const TextStyle(color: AppStyles.softWhite),
                 controller: alarmDescController,
                 decoration: const InputDecoration(
-                  labelStyle: TextStyle(color: AppStyles.softWhite),
+                  contentPadding: EdgeInsets.only(top:30,bottom: 10),
+                  labelStyle: AppStyles.h2Style,
                   labelText: 'Description', // 文本输入框上方的描述性标签
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: AppStyles.softWhite), // 修改下划线颜色
-                  ),
                 ),
               ),
             ]),
           ),
+          provider.editingAlarm?AlarmTimePicker(initialHour: provider.alarmNowSetting.hour,initialMinute: provider.alarmNowSetting.min):const AlarmTimePicker(),
           _operateButton()
         ],
       ),

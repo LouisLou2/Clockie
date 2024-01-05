@@ -15,8 +15,8 @@ class _LapTimesState extends State<LapTimes> {
 
   Consumer<StopWatchProvider> _lapTimesListView() => Consumer<StopWatchProvider>(
     builder:(context, value, child) => SizedBox(
-      height: 200.h,
-      width: 175.w,
+      height: 230.h,
+      width: 220.w,
       child: ListView.builder(
         itemCount: value.lapList.length,
         itemBuilder: (context, index) => SizedBox(height: 50,
@@ -38,8 +38,8 @@ class _LapTimesState extends State<LapTimes> {
       padding: const EdgeInsets.symmetric(horizontal: 80),
       child: Column(
         children: [
-          SizedBox(width: 195.w,
-            child: Row(
+          SizedBox(width: 230.w,
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Order",style: AppStyles.timeTxtStyleB),
@@ -47,9 +47,14 @@ class _LapTimesState extends State<LapTimes> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Container(height: 1,color: AppStyles.softWhite),
+         const Padding(
+           padding: EdgeInsets.only(top:30),
+           child:Divider(
+             height:1,
+             indent: 0,
+             endIndent: 0,
+             thickness: 2,
+           ),
           ),
           _lapTimesListView(),
         ],

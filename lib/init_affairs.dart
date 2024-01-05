@@ -1,6 +1,5 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:clockie/service/alarm_isolate_handler.dart';
-import 'package:clockie/constant/styles/app_styles.dart';
 import 'package:clockie/dict/worldtime_dict.dart';
 import 'package:clockie/model/adapter/alarm_adapter.dart';
 import 'package:clockie/repository/alarm_box.dart';
@@ -39,10 +38,12 @@ Future<void> initDatabase() async{}
 void initBasicUI(){
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-          systemNavigationBarColor: AppStyles.backGroundColor,
-          systemNavigationBarIconBrightness: Brightness.light
+          //systemStatusBarContrastEnforced: true,
+          //statusBarColor: Colors.green,
+          //statusBarIconBrightness: Brightness.dark,
+          systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarIconBrightness: Brightness.dark,
+          systemNavigationBarDividerColor: Colors.transparent,
       )
   );
 }

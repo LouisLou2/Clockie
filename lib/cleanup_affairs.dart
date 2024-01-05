@@ -10,5 +10,4 @@ void cleanUp()async{
   await Hive.close();
   haveCleanUp=true;
   isCleanUp=false;
-  print('Hive closed******************************************');
 }

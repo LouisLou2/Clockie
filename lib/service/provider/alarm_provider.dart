@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clockie/repository/alarm_box.dart';
 import 'package:clockie/service/invoke_handler.dart';
 import 'package:clockie/util/formattor.dart';
@@ -9,6 +11,8 @@ import '../../util/time_util.dart';
 import '../alarm_manager.dart';
 
 class AlarmProvider extends ChangeNotifier {
+  bool shouldRing=false;
+  String alarmNowRinging="";
   Alarm alarmNowSetting = Alarm.active();
   Alarm? backupAlarmNow;
   bool editingAlarm = false;//这里说明正在设置一个先前已经存在的闹钟，设置这个标着的目的就是，先前已经存在的闹钟，先要先把原来的取消掉
@@ -16,11 +20,62 @@ class AlarmProvider extends ChangeNotifier {
   get alarmList=>AlarmBox.box.values.toList(growable: false);
   bool dataInited=false;
   bool get isDataInited => dataInited;
-  int get alarmNum => AlarmBox.box.length;
+  int get alarmNum => ids.length;
   bool isInitingData=false;//是否正在初始化数据，引入这个变量是因为由于异步的原因，initData()可能会被多次调用，所以只调用一次
-
+  void giveupEditing(){
+    editingAlarm=false;
+  }
+  //以下是关于gui中多选delete的
+  late List<bool>selected;
+  bool selecting=false;
+  bool selectAllCheck=false;
+  void changeSelecting(){
+    selecting=!selecting;
+    //只在选完的时候将那些状态置为false
+    if(!selecting){
+      selectAllCheck=false;
+      for(int i=0;i<selected.length;++i){
+        if(selected[i])selected[i]=false;
+      }
+    }
+    notifyListeners();
+  }
+  void changeItemSelected(int index){
+    selected[index]=!selected[index];
+    notifyListeners();
+  }
+  void selectAllOrNot(bool select){
+    if(select){
+      selectAllCheck=true;
+      for(int i=0;i<selected.length;++i){
+        selected[i]=true;
+      }
+    }else{
+      selectAllCheck=false;
+      for(int i=0;i<selected.length;++i){
+        if(selected[i])selected[i]=false;
+      }
+    }
+    notifyListeners();
+  }
+  void deletedSelected(){
+    int len=selected.length;
+    for(int i=len-1;i>=0;--i){
+      if(selected[i]){
+        _deleteAlarmWithouNotify(i);
+      }
+    }
+    changeSelecting();
+    notifyListeners();
+  }
+  String getIdByIndex(int index){
+    return ids[index];
+  }
   Alarm getAlarm(String id) {
     return AlarmBox.box.get(id)!;
+  }
+  Alarm getAlarmByIndex(int index){
+    return getAlarm(ids[index]);
   }
   void pickDay(int index) {
     alarmNowSetting.changeDay(index);
@@ -52,6 +107,7 @@ class AlarmProvider extends ChangeNotifier {
       entry.value.isActive=false;
       AlarmBox.box.put(entry.key, entry.value);
     }
+    selected=List.generate(ids.length, (index) => false);
   }
   void setNowAlarmNameAndDesc(String alarmName,String desc) {
     alarmNowSetting.name = alarmName;
@@ -60,8 +116,8 @@ class AlarmProvider extends ChangeNotifier {
   void submitAlarm() async {
     int? index;
     if(editingAlarm) {
-      deleteAlarmWithouNotify(alarmNowSetting.id);
       index=ids.indexOf(alarmNowSetting.id);
+      removeAlarmFromBoxAndDisregister(index);
     }
     bool isOnce=alarmNowSetting.pickNum==0;
     if(isOnce) {
@@ -73,6 +129,7 @@ class AlarmProvider extends ChangeNotifier {
       ids[index!]=id;
     } else {
       ids.add(id);
+      selected.add(false);
     }
     AlarmBox.box.put(id, alarmNowSetting);
     alarmNowSetting=Alarm.active();//重置,如果仍在原来的alarmNowSetting上修改，会影响到alarmList里的变量
@@ -89,11 +146,18 @@ class AlarmProvider extends ChangeNotifier {
     editingAlarm=false;
     notifyListeners();
   }
-  void deleteItemById(String id) {
-    deleteAlarmWithouNotify(id);
+  // void _deleteItemById(String id) {
+  //   deleteAlarmWithouNotify(id);
+  //   notifyListeners();
+  // }
+
+  //暂时废弃
+  void ___deleteItemByIndex(int ind){
+    _deleteAlarmWithouNotify(ind);
     notifyListeners();
   }
-  void deleteAlarmWithouNotify(String id) {
+  void removeAlarmFromBoxAndDisregister(int index){
+    String id=ids[index];
     if(AlarmBox.box.get(id)!.isActive){
       List<int> ids=alarmKeyParse(id);
       for(var id in ids) {
@@ -101,6 +165,12 @@ class AlarmProvider extends ChangeNotifier {
       }
     }
     AlarmBox.box.delete(id);
+  }
+  //此方法是删除脑中的单元方法，不可以用id,只能用index
+  void _deleteAlarmWithouNotify(int index) {
+    removeAlarmFromBoxAndDisregister(index);
+    ids.removeAt(index);
+    selected.removeAt(index);
   }
   bool turnOffAlarm(String id){
     if(!turnOffAlarmWithoutNotify(id))return false;
@@ -119,6 +189,9 @@ class AlarmProvider extends ChangeNotifier {
     }
     return true;
   }
+  void changeAlarmActiveByIndex(int index){
+    changeAlarmActive(ids[index]);
+  }
   //不启用一个闹钟
   void changeAlarmActive(String id) {
     Alarm theAlarm=AlarmBox.box.get(id)!;
@@ -134,6 +207,14 @@ class AlarmProvider extends ChangeNotifier {
       AlarmManager.smartSetAlarmWithExistingId(theAlarm, InvokeHandler.notifyAndSmartTurnOff);
     }
     notifyListeners();
+  }
+  void ringAlarm(String id){
+    alarmNowRinging=id;
+    shouldRing=true;
+    notifyListeners();
+  }
+  void shutDownAlarm(){
+    shouldRing=false;
   }
   @override
   void dispose(){

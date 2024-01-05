@@ -18,6 +18,6 @@ class InvokeHandler{
       SendPort? sendPort = IsolateNameServer.lookupPortByName(params['portName']);
       sendPort?.send(CommandMessage(cmdCode: CommandCode.restartAlarmNextWeek, id: params['id'],uniqueId: params['uniqueId']).toString());
     }
-    NotificationVault.showAlarmNotification(id,params);
+    NotificationVault.showAlarmFullNotification(id,params);
   }
 }

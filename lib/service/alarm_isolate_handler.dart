@@ -23,6 +23,7 @@ class AlarmIsolateHandler{
   static void onData(dynamic message){
     Map<String, dynamic> params = jsonDecode(message) as Map<String, dynamic>;
     final cmd=CommandMessage.fromJson(params);//item1是命令，item2是参数（闹钟id）
+    PenthHouseProviders.alarmProvider!.ringAlarm(cmd.id);
     if(cmd.cmdCode==CommandCode.TurnOffAlarm) {
       if(PenthHouseProviders.alarmProvider==null)throw Exception('AlarmIsolateHandler: alarmProvider is not initialized');
       PenthHouseProviders.alarmProvider!.turnOffAlarm(cmd.id);

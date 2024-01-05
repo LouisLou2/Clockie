@@ -1,7 +1,10 @@
 import 'package:clockie/cleanup_affairs.dart';
+import 'package:clockie/constant/styles/style.dart';
+import 'package:clockie/global_context.dart';
 import 'package:clockie/gui/page/stopwatch_page.dart';
 import 'package:clockie/service/navigation/navigator_manager.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
+import 'package:clockie/service/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:clockie/constant/styles/app_styles.dart';
@@ -46,19 +49,24 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
       ChangeNotifierProvider.value(value: PenthHouseProviders.worldClockProvider),
       ChangeNotifierProvider.value(value:PenthHouseProviders.stopWatchProvider),
       ChangeNotifierProvider.value(value:PenthHouseProviders.timerProvider),
+      ChangeNotifierProvider.value(value: PenthHouseProviders.themeProvider),
     ],
     child: ScreenUtilInit(
       designSize: const Size(360, 640),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (context, child) =>  MaterialApp(
-        title: 'Clockie',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            scaffoldBackgroundColor: AppStyles.backGroundColor
-        ),
-        home: const Tab(),
-        routes: NavigatorManager.routes,//注册路由表
+      builder: (context, child) => Selector<ThemeProvider,bool>(
+        selector: (context,prov)=>prov.curTheme,
+        builder: (context, value, Widget? child) {
+          GlobalContext.appContext=context;
+          return MaterialApp(
+            title: 'Clockie',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeVault.getThemeByBrightness(value),
+            home: const Tab(),
+            routes: NavigatorManager.routes, //注册路由表
+          );
+        }
       ),
     ),
   );
@@ -94,10 +102,10 @@ class Tab extends StatelessWidget{
         ),
         bottomNavigationBar: TabBar(
           labelPadding: const EdgeInsets.all(10),
-          //padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 1),
           labelColor: AppStyles.blueColor,
           labelStyle: AppStyles.tabTxtStyle,
-          unselectedLabelColor: AppStyles.softWhite,
+          //unselectedLabelColor: AppStyles.softWhite,
           splashBorderRadius: BorderRadius.circular(30),
           indicatorColor: AppStyles.blueColor,
           indicatorPadding: const EdgeInsets.all(0), // 可能需要将指示器的边距设置为零

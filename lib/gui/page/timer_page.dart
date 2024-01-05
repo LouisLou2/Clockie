@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../widget/button.dart';
+import '../../service/provider/theme_provider.dart';
+import '../widget/generic/button.dart';
 import '../widget/timer/timer_indicator.dart';
 import '../widget/timer/timer_time_picker.dart';
 
@@ -20,22 +21,45 @@ class _TimerPageState extends State<TimerPage> with AutomaticKeepAliveClientMixi
 
 
   Widget _timerButtonGroup(){
-    TimerProvider prov=Provider.of<TimerProvider>(context,listen: false);
+    TimerProvider tprov=Provider.of<TimerProvider>(context,listen: false);
     return Selector<TimerProvider,bool>(
       selector:(context,provider)=>provider.isRunning,
       builder:(BuildContext context, bool isRunning,Widget?child)=>
         Row(
           mainAxisAlignment:MainAxisAlignment.spaceEvenly,
-          children: isRunning ? [
+          children: isRunning ? <Widget>[
             Selector<TimerProvider,bool>(
-                selector: (context,provider)=>provider.timerActive,
-                builder:(BuildContext context,bool timerActive,Widget?child) =>
-                    timerActive?buttonMaimStyle(press: ()=>prov.countingStateChange(),label: 'Pause')
-                        :buttonExecuteStyle(press: ()=>prov.countingStateChange(),label: 'Continue'),
+              selector: (context,provider)=>provider.timerActive,
+              builder:(BuildContext context,bool timerActive,Widget?child) =>
+                  timerActive ? Selector<ThemeProvider,bool>(
+                    selector: (context,prov)=>prov.curTheme,
+                    builder:(context,value,child)=>pauseIconButton(
+                      theme: value,
+                      onPressd:()=>tprov.countingStateChange(),
+                    )
+                  ):Selector<ThemeProvider,bool>(
+                      selector: (context,prov)=>prov.curTheme,
+                      builder:(context,value,child)=>playIconButton(
+                        theme: value,
+                        onPressd:()=>tprov.countingStateChange(),
+                      )
+                  ),
+              ),
+              Selector<ThemeProvider,bool>(
+                  selector: (context,prov)=>prov.curTheme,
+                  builder:(context,value,child)=>resetIconButton(
+                    theme: value,
+                    onPressd:()=>tprov.reset(),
+                  )
+              ),
+            ]:[
+              Selector<ThemeProvider,bool>(
+                selector: (context,prov)=>prov.curTheme,
+                builder:(context,value,child)=>playIconButton(
+                  theme: value,
+                  onPressd:()=>tprov.start(context),
+                )
             ),
-            buttonQuietStyle(press: ()=>prov.reset(),label: 'Finish'),
-          ]:[
-            buttonExecuteStyle(press: ()=>prov.start(),label: 'Start'),
           ]
        )
     );
@@ -54,9 +78,7 @@ class _TimerPageState extends State<TimerPage> with AutomaticKeepAliveClientMixi
   }
   @override
   Widget build(BuildContext context) {
-
     super.build(context);
-
     return Scaffold(
       body: Center(
         child:_overlayCheck(),
