@@ -87,7 +87,7 @@ class _AlarmPageState extends State<AlarmPage> with AutomaticKeepAliveClientMixi
               },
               icon: Selector<AlarmProvider,bool>(
                 selector: (context,prov)=>prov.selecting,
-                builder: (context,value,child)=>value?const Icon(CupertinoIcons.check_mark,size: 30,):const Icon(CupertinoIcons.pen,size: 30,)
+                builder: (context,value,child)=>value?const Icon(CupertinoIcons.checkmark_alt,size: 30,):const Icon(CupertinoIcons.pen,size: 30,)
                 ),
               ),
             ),
@@ -111,7 +111,7 @@ class _AlarmPageState extends State<AlarmPage> with AutomaticKeepAliveClientMixi
       floatingActionButton: getFloatingButton(
           theme:PenthHouseProviders.themeProvider!.curTheme,
           onPressd: () => Navigator.pushNamed(context, '/alarm/add'),
-          icon:const Icon(Icons.add),
+          icon:const Icon(Icons.add,size: 30,),
           toolTip: 'Add Alarm',
           circle: false),
     );

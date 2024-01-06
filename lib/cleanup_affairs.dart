@@ -1,13 +1,13 @@
 import 'package:hive/hive.dart';
-bool haveCleanUp=false;
-bool isCleanUp=false;
+bool haveCleanedUp=false;
+bool isCleaning=false;
 void cleanUp()async{
-  if(haveCleanUp||isCleanUp){
+  if(haveCleanedUp||isCleaning){
     return;
   }
-  isCleanUp=true;
+  isCleaning=true;
   // 关闭 Hive 连接
   await Hive.close();
-  haveCleanUp=true;
-  isCleanUp=false;
+  haveCleanedUp=true;
+  isCleaning=false;
 }

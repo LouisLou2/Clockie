@@ -22,7 +22,7 @@ class WorldTimeDict{
     timeDiffDict=TimeDiffBox.box.toMap().map((key, value) => MapEntry(key as String, value));
     hasInited=true;
     isIniting=false;
-    TimeDiffBox.closeBox();//关闭box
+    TimeDiffBox.closeBox();//读取完即自动关闭
   }
   static void updateTimeDiff(){
     timeDiffDict={};

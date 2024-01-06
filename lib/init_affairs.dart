@@ -11,18 +11,18 @@ import 'package:clockie/service/navigation/navigator_manager.dart';
 import 'package:clockie/service/notification/notification_service.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 
 Future<void>initMustBeforeRunApp()async {
   initBasicUI();
-  initNavigationManager();
+  NavigatorManager.init();
   PenthHouseProviders.init();
   AlarmIsolateHandler.init();
   await Hive.initFlutter();
   Hive.registerAdapter(AlarmAdapter());
   await SettingBox.openBox();
   AlarmManager.initAvailableId();
+  PenthHouseProviders.themeProvider!.init();
 }
 Future<void> initNormally() async{
   AlarmBox.openBox();
@@ -36,22 +36,20 @@ Future<void> initNormally() async{
 Future<void> initDatabase() async{}
 
 void initBasicUI(){
-  SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-          //systemStatusBarContrastEnforced: true,
-          //statusBarColor: Colors.green,
-          //statusBarIconBrightness: Brightness.dark,
-          systemNavigationBarColor: Colors.transparent,
-          systemNavigationBarIconBrightness: Brightness.dark,
-          systemNavigationBarDividerColor: Colors.transparent,
-      )
-  );
+  //目前是多余的
+  // SystemChrome.setSystemUIOverlayStyle(
+  //     const SystemUiOverlayStyle(
+  //         //systemStatusBarContrastEnforced: true,
+  //         //statusBarColor: Colors.green,
+  //         //statusBarIconBrightness: Brightness.dark,
+  //         systemNavigationBarColor: Colors.transparent,
+  //         systemNavigationBarIconBrightness: Brightness.dark,
+  //         systemNavigationBarDividerColor: Colors.transparent,
+  //     )
+  // );
 }
 Future<void> initNotification() async{
   WidgetsFlutterBinding.ensureInitialized();
   await AndroidAlarmManager.initialize();
   await NotificationService.initializeNotification();
-}
-Future<void> initNavigationManager() async{
-  await NavigatorManager.init();
 }

@@ -3,6 +3,7 @@ import 'package:flutter/Material.dart';
 
 void showFloatingSnackBar(BuildContext context,String info) {
   final snackBar = SnackBar(
+    backgroundColor: AppStyles.blueColor,
     content: const Text('This is a smooth message'),
     duration: const Duration(seconds: 2),
     behavior: SnackBarBehavior.floating, // 使用浮动行为
@@ -25,6 +26,7 @@ void showFloatingSnackBar(BuildContext context,String info) {
 }
 void showSimpleSnackBar(BuildContext context,String info) {
   var snackBar=SnackBar(
+    backgroundColor: AppStyles.blueColor,
     content:  Text(info,style: AppStyles.subTitleStyle,),
     duration: const Duration(seconds: 2)
   );

@@ -22,14 +22,4 @@ class AlarmBox {
   static Future<void> openBoxWithoutCheck() async{
     box= await Hive.openBox<Alarm>(name);
   }
-  // static Future<int> getAvailableId()async{
-  //   if(!isBoxOpen()) await openBoxWithoutCheck();
-  //   Alarm? wrappedId=box.get(availableIdKey);
-  //   if(wrappedId==null) {
-  //     wrappedId=Alarm.empty()..id='0';
-  //     box.put(availableIdKey,wrappedId);
-  //     return 0;
-  //   }
-  //   return int.parse(wrappedId.id);
-  // }
 }

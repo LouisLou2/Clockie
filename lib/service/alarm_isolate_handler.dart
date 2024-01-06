@@ -32,6 +32,5 @@ class AlarmIsolateHandler{
       //下面这个时间不能用DateTime.now().add(Duration(days:7));因为我怕万一有延迟，这延迟会积累越来越大,但是我烦了，就这样吧
       AlarmManager.setAlarmForLoop(id: cmd.uniqueId, unitId: cmd.id, alarm: AlarmBox.box.get(cmd.id), time: DateTime.now().add(const Duration(days:7)), doThingsWhenInvoke: InvokeHandler.notifyAndSmartTurnOff);
     }
-    print("AlarmIsolateHandler: $message");
   }
 }

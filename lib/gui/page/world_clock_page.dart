@@ -57,10 +57,16 @@ class _WorldClockPageState extends State<WorldClockPage> with AutomaticKeepAlive
               initialData: TimeUtil.getNativeDateStr(),
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot)=>Text(TimeUtil.getNativeDateStr(),style: AppStyles.subTxtStyle),
             ),
-            trailing: IconButton(onPressed:() {
-              Navigator.pushNamed(context, '/world_clock/select');},
-              icon: const Icon(Icons.add),
+            trailing: IconButton(
+              onPressed:() {Navigator.pushNamed(context, '/world_clock/select');},
+              icon: const Icon(Icons.add_location_alt_outlined,size:30),
             ),
+          ),
+          const Divider(
+            indent:18,
+            endIndent: 18,
+            color: Colors.black26, // 设置横线的颜色
+            thickness: 20, // 设置横线的厚度
           ),
         ]
     );

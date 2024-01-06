@@ -60,7 +60,9 @@ Widget alarmBasicCard(Color backgroundColor,bool withShadow,int index){
                 value: isSelected,
                 onChanged: (value){
                   PenthHouseProviders.alarmProvider!.changeItemSelected(index);
-                }
+                },
+                checkColor: Colors.white,
+                activeColor: AppStyles.blueColor,
               ),
           )
         ),
@@ -144,7 +146,7 @@ Widget alarmCard(int index,BuildContext context) {
       child: InkWell(
         borderRadius: AppStyles.genericCardBorderRadius,
         onTap:()=>{
-          !(PenthHouseProviders.alarmProvider!.selecting)?Navigator.pushNamed(context, '/alarm/add',arguments: id):PenthHouseProviders.alarmProvider!.changeItemSelected(index),
+          !(PenthHouseProviders.alarmProvider!.selecting)?Navigator.pushNamed(context, '/alarm/add',arguments: index):PenthHouseProviders.alarmProvider!.changeItemSelected(index),
         },
         //onLongPress: () => aprov.deleteItemByIndex(index),
         child: Selector<ThemeProvider,bool>(

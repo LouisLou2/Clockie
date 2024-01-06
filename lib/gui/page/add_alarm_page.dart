@@ -76,13 +76,13 @@ class _AddAlarmPageState extends State<AddAlarmPage> {
   }
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<AlarmProvider>(context, listen: false); //当前节点不订阅，只是获取
-    final id = ModalRoute.of(context)!.settings.arguments as String?;
-    if(id!=null){
-      provider.alarmNowSettingWithExisting(id);
+    final aprov = Provider.of<AlarmProvider>(context, listen: false); //当前节点不订阅，只是获取
+    final index = ModalRoute.of(context)!.settings.arguments as int?;
+    if(index!=null){
+      aprov.alarmNowSettingWithExisting(index);
       _initTextEditingController(
-          name:provider.alarmNowSetting.name,
-          desc:provider.alarmNowSetting.desc
+          name:aprov.alarmNowSetting.name,
+          desc:aprov.alarmNowSetting.desc
       );
     }else{
       _initTextEditingController();
@@ -113,7 +113,7 @@ class _AddAlarmPageState extends State<AddAlarmPage> {
                         icon: const Icon(Icons.calendar_month_outlined,size:30))
                   ]
               ),
-              _dayPicker(id),
+              _dayPicker(index!=null?aprov.ids[index]:null),
               TextField(
                 controller: alarmNameController,
                 decoration: const InputDecoration(
@@ -132,7 +132,7 @@ class _AddAlarmPageState extends State<AddAlarmPage> {
               ),
             ]),
           ),
-          provider.editingAlarm?AlarmTimePicker(initialHour: provider.alarmNowSetting.hour,initialMinute: provider.alarmNowSetting.min):const AlarmTimePicker(),
+          aprov.editingAlarmInd!=-1?AlarmTimePicker(initialHour: aprov.alarmNowSetting.hour,initialMinute: aprov.alarmNowSetting.min):const AlarmTimePicker(),
           _operateButton()
         ],
       ),

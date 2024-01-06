@@ -4,11 +4,11 @@ import '../../../constant/styles/style.dart';
 
 Widget getFloatingButton({required bool theme,required void Function() onPressd,required Icon icon,String?toolTip,required bool circle}){
   return FloatingActionButton(
-      highlightElevation: 5,
+      highlightElevation: 20,
       onPressed: onPressd,
       shape:circle?BorderEnum.circleLike:BorderEnum.roundedRect,
-      foregroundColor: Colors.black,
-      backgroundColor: Colors.white70,
+      foregroundColor: Colors.cyan,
+      backgroundColor: Colors.white70.withOpacity(1),
       tooltip: toolTip,
       child: icon,
   );

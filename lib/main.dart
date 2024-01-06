@@ -1,11 +1,14 @@
 import 'package:clockie/cleanup_affairs.dart';
+import 'package:clockie/constant/app_properties.dart';
 import 'package:clockie/constant/styles/style.dart';
 import 'package:clockie/global_context.dart';
 import 'package:clockie/gui/page/stopwatch_page.dart';
 import 'package:clockie/service/navigation/navigator_manager.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:clockie/service/provider/theme_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:clockie/constant/styles/app_styles.dart';
 import 'gui/page/alarm_page.dart';
@@ -28,13 +31,25 @@ class MyApp extends StatefulWidget{//WidgetsBindingObserver用于监听生命周
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
+  bool firstLaunch=true;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@addPostFrameCallback");
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@addPostFrameCallback");
+    });
+    var dispatcher = SchedulerBinding.instance.platformDispatcher;
+    // This callback is called every time the brightness changes.
+    dispatcher.onPlatformBrightnessChanged = () {
+      print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@onPlatformBrightnessChanged");
+    };
+  }
+  @override
+  void didChangePlatformBrightness() {
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@didChangePlatformBrightness");
+    super.didChangePlatformBrightness();
+    PenthHouseProviders.themeProvider!.onPlatFormBrightnessChange();
   }
   @override
   void dispose() {
@@ -50,6 +65,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
       ChangeNotifierProvider.value(value:PenthHouseProviders.stopWatchProvider),
       ChangeNotifierProvider.value(value:PenthHouseProviders.timerProvider),
       ChangeNotifierProvider.value(value: PenthHouseProviders.themeProvider),
+      ChangeNotifierProvider.value(value: PenthHouseProviders.resourceProvider),
     ],
     child: ScreenUtilInit(
       designSize: const Size(360, 640),
@@ -59,8 +75,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
         selector: (context,prov)=>prov.curTheme,
         builder: (context, value, Widget? child) {
           GlobalContext.appContext=context;
+          if(firstLaunch&&PenthHouseProviders.themeProvider!.withSys){
+            firstLaunch=false;
+            value=MediaQuery.platformBrightnessOf(context)==Brightness.light;
+            PenthHouseProviders.themeProvider!.curTheme=value;
+          }
+          //PenthHouseProviders.themeProvider!.changeNavbar();
           return MaterialApp(
-            title: 'Clockie',
+            title: AppProperties.APP_NAME,
             debugShowCheckedModeBanner: false,
             theme: ThemeVault.getThemeByBrightness(value),
             home: const Tab(),
@@ -102,18 +124,17 @@ class Tab extends StatelessWidget{
         ),
         bottomNavigationBar: TabBar(
           labelPadding: const EdgeInsets.all(10),
-          padding: const EdgeInsets.symmetric(vertical: 1),
+          padding: const EdgeInsets.symmetric(vertical: 0),
           labelColor: AppStyles.blueColor,
           labelStyle: AppStyles.tabTxtStyle,
-          //unselectedLabelColor: AppStyles.softWhite,
-          splashBorderRadius: BorderRadius.circular(30),
+          splashBorderRadius: BorderRadius.circular(10),
           indicatorColor: AppStyles.blueColor,
-          indicatorPadding: const EdgeInsets.all(0), // 可能需要将指示器的边距设置为零
-          tabs: [
-            tabTxt("Alarm"),
-            tabTxt('World Clock'),
-            tabTxt('StopWatch'),
-            tabTxt('Timer'),
+          indicatorPadding: const EdgeInsets.all(0),// 可能需要将指示器的边距设置为零
+          tabs: const [
+            Icon(CupertinoIcons.alarm),
+            Icon(CupertinoIcons.globe),
+            Icon(CupertinoIcons.stopwatch),
+            Icon(CupertinoIcons.timer),
           ],
           dividerColor: Colors.transparent,
         ),

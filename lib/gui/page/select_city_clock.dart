@@ -44,7 +44,7 @@ Widget _cityList(BuildContext context) {
               timezone: diffList[index],
               theme: value,
               ontap: (String zone) {
-                if(wprov.selectCity(zone)){
+                if(!wprov.selectCity(zone)){
                   showSimpleSnackBar(context, 'The City Has Already Been Added');
                 }
                 Navigator.pop(context);

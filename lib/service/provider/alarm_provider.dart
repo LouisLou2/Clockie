@@ -14,8 +14,7 @@ class AlarmProvider extends ChangeNotifier {
   bool shouldRing=false;
   String alarmNowRinging="";
   Alarm alarmNowSetting = Alarm.active();
-  Alarm? backupAlarmNow;
-  bool editingAlarm = false;//这里说明正在设置一个先前已经存在的闹钟，设置这个标着的目的就是，先前已经存在的闹钟，先要先把原来的取消掉
+  int editingAlarmInd = -1;//这里说明正在设置一个先前已经存在的闹钟，设置这个标着的目的就是，先前已经存在的闹钟，先要先把原来的取消掉
   List<String>ids=[];//单独设置这个，为了防止修改闹钟导致全列表刷新
   get alarmList=>AlarmBox.box.values.toList(growable: false);
   bool dataInited=false;
@@ -24,7 +23,9 @@ class AlarmProvider extends ChangeNotifier {
   bool isInitingData=false;//是否正在初始化数据，引入这个变量是因为由于异步的原因，initData()可能会被多次调用，所以只调用一次
 
   void giveupEditing(){
-    editingAlarm=false;
+    if(editingAlarmInd==-1)return;
+    editingAlarmInd=-1;
+    alarmNowSetting=Alarm.active();
   }
   //以下是关于gui中多选delete的
   late List<bool>selected;
@@ -82,10 +83,9 @@ class AlarmProvider extends ChangeNotifier {
     alarmNowSetting.changeDay(index);
     notifyListeners();
   }
-  void alarmNowSettingWithExisting(String id) {
-    alarmNowSetting = AlarmBox.box.get(id)!;
-    //backupAlarmNow = Alarm.copyWith(alarmNowSetting);
-    editingAlarm = true;
+  void alarmNowSettingWithExisting(int index) {
+    alarmNowSetting = AlarmBox.box.get(ids[index])!;
+    editingAlarmInd = index;
   }
   ///这个不仅是将过期闹钟的状态改为false，还会将把应该Active的闹钟再次重新设置一遍，
   ///因为我发现我只要一离开应用（Swiped）,再次进入，即使闹钟应该是Active的，也不会触发，所以再次设置一遍
@@ -115,10 +115,8 @@ class AlarmProvider extends ChangeNotifier {
     alarmNowSetting.desc = desc;
   }
   void submitAlarm() async {
-    int? index;
-    if(editingAlarm) {
-      index=ids.indexOf(alarmNowSetting.id);
-      removeAlarmFromBoxAndDisregister(index);
+    if(editingAlarmInd!=-1) {
+      removeAlarmFromBoxAndDisregister(editingAlarmInd);
     }
     bool isOnce=alarmNowSetting.pickNum==0;
     if(isOnce) {
@@ -126,15 +124,15 @@ class AlarmProvider extends ChangeNotifier {
     }
     String id=await AlarmManager.smartSetAlarm(alarmNowSetting,InvokeHandler.notifyAndSmartTurnOff);
     alarmNowSetting.id = id;
-    if(editingAlarm) {
-      ids[index!]=id;
+    if(editingAlarmInd!=-1) {
+      ids[editingAlarmInd]=id;
     } else {
       ids.add(id);
       selected.add(false);
     }
     AlarmBox.box.put(id, alarmNowSetting);
     alarmNowSetting=Alarm.active();//重置,如果仍在原来的alarmNowSetting上修改，会影响到alarmList里的变量
-    if(editingAlarm)editingAlarm=false;//不要忘了把这个标志位重置
+    if(editingAlarmInd!=-1)editingAlarmInd=-1;//不要忘了把这个标志位重置
     notifyListeners();
   }
   Future<void> initData() async {
@@ -144,12 +142,7 @@ class AlarmProvider extends ChangeNotifier {
     filterActiveState();
     dataInited=true;
     isInitingData=false;
-    editingAlarm=false;
-    notifyListeners();
-  }
-  //暂时废弃
-  void ___deleteItemByIndex(int ind){
-    _deleteAlarmWithouNotify(ind);
+    editingAlarmInd=-1;
     notifyListeners();
   }
   void removeAlarmFromBoxAndDisregister(int index){

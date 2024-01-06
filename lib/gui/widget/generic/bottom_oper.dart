@@ -11,8 +11,12 @@ Widget getBottomOperationBar(){
         offstage: !value,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-          child: SizedBox(
-              height: 100,
+          child: Container(
+            decoration: const BoxDecoration(
+              color: AppStyles.blueColor,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+              height: 70,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -25,6 +29,8 @@ Widget getBottomOperationBar(){
                           onChanged: (value) {
                             PenthHouseProviders.alarmProvider!.selectAllOrNot(value!);
                           },
+                          checkColor: Colors.white,
+                          activeColor: AppStyles.blueColor,
                         ),
                       ),
                       const Text('Select All',style: AppStyles.subTitleStyle),
@@ -33,7 +39,7 @@ Widget getBottomOperationBar(){
                   InkWell(
                     child:IconButton(
                       onPressed:  ()=>PenthHouseProviders.alarmProvider!.deletedSelected(),
-                      icon: const Icon(Icons.delete),
+                      icon: const Icon(Icons.delete,size: 30,color: Colors.white,),
                     ),
                   ),
                 ],
