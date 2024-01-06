@@ -1,7 +1,7 @@
-import 'package:clockie/repository/box_manager.dart';
 import 'package:hive/hive.dart';
 
 import '../model/alarm_model.dart';
+import 'box_manager.dart';
 
 class AlarmBox {
   static const String name = BoxManager.alarmBoxName;

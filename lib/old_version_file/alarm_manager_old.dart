@@ -3,7 +3,7 @@ import 'package:clockie/model/alarm_model.dart';
 import 'package:clockie/model/base_time.dart';
 import 'package:tuple/tuple.dart';
 
-import 'alarm_isolate_handler.dart';
+import '../service/alarm_isolate_handler.dart';
 import '../repository/setting_box.dart';
 ///在此类中有一个upadateNowTime()方法，因为一个方法可能有几处都会用到现在的时间，
 ///我不想每次都DateTime.now()，所以我一个方法只更新一次，我相信这一个方法应该不会有太大的时间跨度，所以应该可行

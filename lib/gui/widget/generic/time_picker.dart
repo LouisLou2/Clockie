@@ -32,13 +32,16 @@ Widget oneTimePicker({
     height: singlePickerHeight,
     child:ListWheelScrollView.useDelegate(
         controller: controller,
+        useMagnifier: true,
+        magnification: 1.2,
         itemExtent: WidgetSetting.listWheelItemExtent,
         diameterRatio: WidgetSetting.listWheelDiameterRatio,//滚轮的直径与视口直径的比率
         onSelectedItemChanged: onSelectedItemChanged,
-        physics: const FixedExtentScrollPhysics(),//滚轮的物理特性: FixedExtentScrollPhysics()固定大小的滚轮
-        childDelegate: ListWheelChildBuilderDelegate(
-          childCount: itemCount,
-          builder: (context, index) => timeEleTxt(index),
+        physics: const RangeMaintainingScrollPhysics(),//滚轮的物理特性: FixedExtentScrollPhysics()固定大小的滚轮
+        childDelegate: ListWheelChildLoopingListDelegate(
+          children: List<Widget>.generate(itemCount, (index) {
+            return timeEleTxt(index);
+          })
         ),
       ),
     ),

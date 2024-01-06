@@ -27,6 +27,7 @@ class AppStyles {
 
   static const TextStyle messageStyle = TextStyle(fontSize: 18,fontFamily: "Poppins",fontWeight: FontWeight.w500);
   static const TextStyle buttonTxt = TextStyle(color:Colors.black87,fontSize: 18,fontFamily: "Poppins",fontWeight: FontWeight.w600);
+  static const TextStyle smallButtonTxt = TextStyle(color:blueColor,fontSize: 16,fontFamily: "Poppins",fontWeight: FontWeight.w600);
 
   static final BorderRadius genericButtonBorderRadius = BorderRadius.circular(25);
   static final BorderRadius genericCardBorderRadius = BorderRadius.circular(20);

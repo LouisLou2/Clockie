@@ -49,7 +49,7 @@ class _AlarmPageState extends State<AlarmPage> with AutomaticKeepAliveClientMixi
           children:[
             const Text("Alarms",style: AppStyles.h1Style,),
             Selector<AlarmProvider,bool>(
-              selector: (context,prov)=>prov.shouldRing,
+              selector: (context,prov)=>true,
               builder: (context,value,child){
                 if(!value){
                   return const SizedBox.shrink();
@@ -59,10 +59,11 @@ class _AlarmPageState extends State<AlarmPage> with AutomaticKeepAliveClientMixi
                   showDialog<void>(
                     context: context,
                     builder: (BuildContext context) {
-                      String alarmId=PenthHouseProviders.alarmProvider!.alarmNowRinging;
-                      Alarm alarm=PenthHouseProviders.alarmProvider!.getAlarm(alarmId);
-                      PenthHouseProviders.alarmProvider!.shutDownAlarm();
-                      return alarmDialog(context,alarm.name!=""?alarm.name:"Untitled Alarm",alarm.desc!=""?alarm.desc:"No Description");
+                      return alarmDialog(context,"Untitled Alarm","No Description");
+                      // String alarmId=PenthHouseProviders.alarmProvider!.alarmNowRinging;
+                      // Alarm alarm=PenthHouseProviders.alarmProvider!.getAlarm(alarmId);
+                      // PenthHouseProviders.alarmProvider!.shutDownAlarm();
+                      // return alarmDialog(context,alarm.name!=""?alarm.name:"Untitled Alarm",alarm.desc!=""?alarm.desc:"No Description");
                     },
                   );
                 });

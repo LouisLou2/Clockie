@@ -39,6 +39,6 @@ Widget buttonMaimStyle({required Function() press,String? label}){
 }
 Widget buttonQuietStyle({required Function() press,String? label}){
   return button(
-    press,AppStyles.softWhite,label??'Reset'
+    press,Colors.grey,label??'Reset'
   );
 }

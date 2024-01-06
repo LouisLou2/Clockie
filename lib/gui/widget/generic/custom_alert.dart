@@ -34,23 +34,17 @@ void showSimpleSnackBar(BuildContext context,String info) {
 }
 Widget alarmDialog(BuildContext context,String title,String desc){
   return AlertDialog(
-    title: Text(title),
-    content: Text(desc),
+    title: Text(title,style: AppStyles.h1Style,),
+    content: Text(desc,style:AppStyles.subTitleStyle),
     actions: <Widget>[
       TextButton(
-        style: TextButton.styleFrom(
-          textStyle: Theme.of(context).textTheme.labelLarge,
-        ),
-        child: const Text('Shut Down'),
+        child: const Text('Shut Down',style: AppStyles.smallButtonTxt,),
         onPressed: () {
           Navigator.of(context).pop();
         },
       ),
       TextButton(
-        style: TextButton.styleFrom(
-          textStyle: Theme.of(context).textTheme.labelLarge,
-        ),
-        child: const Text('Remind Later'),
+        child: const Text('Remind Later',style: AppStyles.smallButtonTxt,),
         onPressed: () {
           Navigator.of(context).pop();
         },

@@ -3,6 +3,7 @@ import 'package:clockie/gui/widget/stopwatch/digit_clock.dart';
 import 'package:clockie/gui/widget/stopwatch/lap_times.dart';
 import 'package:clockie/service/provider/stopwatch_provider.dart';
 import 'package:clockie/service/provider/theme_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -92,14 +93,20 @@ class _StopwatchPageState extends State<StopwatchPage> with AutomaticKeepAliveCl
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 200,
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: EdgeInsets.only(top: 40.h,right: 20.h),
+                child: IconButton(onPressed: (){}, icon: Icon(Icons.history,size: 25.h,)),
+              ),
+            ),
+            SizedBox(
+              height: 60.h,
             ),
             const StopWatchWidget(),
             lapsListWidget(),
