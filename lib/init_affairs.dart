@@ -1,4 +1,6 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:clockie/model/adapter/string_set_adapter.dart';
+import 'package:clockie/repository/holidays_repo.dart';
 import 'package:clockie/service/alarm_isolate_handler.dart';
 import 'package:clockie/dict/worldtime_dict.dart';
 import 'package:clockie/model/adapter/alarm_adapter.dart';
@@ -19,9 +21,10 @@ Future<void>initMustBeforeRunApp()async {
   PenthHouseProviders.init();
   AlarmIsolateHandler.init();
   await Hive.initFlutter();
-  Hive.registerAdapter(AlarmAdapter());
+  registerHiveAdapter();
   await SettingBox.openBox();
   AlarmManager.initAvailableId();
+  PenthHouseProviders.settingsProvider!.init();
   PenthHouseProviders.themeProvider!.init();
 }
 Future<void> initNormally() async{
@@ -32,6 +35,7 @@ Future<void> initNormally() async{
   ChosenCityBox.openBox();
   PenthHouseProviders.worldClockProvider?.initData();
   initNotification();
+  HolidaysRepo.initializeHolidayRepo();
 }
 Future<void> initDatabase() async{}
 
@@ -52,4 +56,8 @@ Future<void> initNotification() async{
   WidgetsFlutterBinding.ensureInitialized();
   await AndroidAlarmManager.initialize();
   await NotificationService.initializeNotification();
+}
+void registerHiveAdapter(){
+  Hive.registerAdapter(AlarmAdapter());
+  Hive.registerAdapter(StringSetAdapter());
 }

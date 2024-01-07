@@ -1,4 +1,5 @@
 import 'package:clockie/service/provider/penthhouse_provider.dart';
+import 'package:clockie/service/provider/settings_provider.dart';
 import 'package:clockie/service/provider/theme_provider.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter/cupertino.dart';
@@ -105,7 +106,13 @@ class _MoreSettingPageState extends State<MoreSettingPage> {
                     CustomListTile(
                       title: "No Ring on Legal Holidays",
                       icon:CupertinoIcons.volume_mute,
-                      trailing: CupertinoSwitch(value:true, onChanged: (value){}),
+                      trailing: Selector<SettingsProvider,bool>(
+                        selector: (context,prov)=>prov.skippingHolidays,
+                        builder: (context, value, child) => CupertinoSwitch(
+                          value: value,
+                          onChanged: (value) => PenthHouseProviders.settingsProvider!.changeSkippingHolidays(context),
+                        ),
+                      ),
                     ),
                   ]
               ),

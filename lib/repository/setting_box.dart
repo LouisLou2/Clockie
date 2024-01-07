@@ -7,6 +7,7 @@ class SettingBox {
   static const String name = BoxManager.settingBoxName;
   static const String availableIdKey = 'alarmAvailableId';
   static const String themeCodeKey = 'themeCode';
+  static const String skippingHolidaysKey = 'skippingHolidays';
   static late Box<int> box;
   // 检查指定名称的 Hive 数据盒子是否已经打开
   static bool isBoxOpen() => Hive.isBoxOpen(name);
@@ -53,5 +54,16 @@ class SettingBox {
   }
   static int getThemeCode(){
     return box.get(themeCodeKey)??ThemeEnum.light.index;
+  }
+  static Future<void> setSkippingHolidays(bool skipping) async{
+    box.put(skippingHolidaysKey, skipping?1:0);
+  }
+  static bool getSkippingHolidays(){
+    int? value=box.get(skippingHolidaysKey);
+    if(value==null){
+      setSkippingHolidays(false);
+      return false;
+    }
+    return value==1;
   }
 }
