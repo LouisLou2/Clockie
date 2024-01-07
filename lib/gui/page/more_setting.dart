@@ -1,3 +1,4 @@
+import 'package:clockie/repository/setting_box.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:clockie/service/provider/settings_provider.dart';
 import 'package:clockie/service/provider/theme_provider.dart';
@@ -52,56 +53,71 @@ class _MoreSettingPageState extends State<MoreSettingPage> {
                   CustomListTile(
                     title:'Ring Duration',
                     icon:Icons.access_time_rounded,
-                    trailing: DropdownButton(
-                      value: 1,
-                      borderRadius: BorderRadius.circular(10),
-                      onChanged: (value) {},
-                      items: const [
-                        DropdownMenuItem(
-                          value: 1,
-                          child: Text('1 min'),
-                        ),
-                        DropdownMenuItem(
-                          value: 5,
-                          child: Text('5 min'),
-                        ),
-                        DropdownMenuItem(
-                          value: 10,
-                          child: Text('10 min'),
-                        ),
-                        DropdownMenuItem(
-                          value: 15,
-                          child: Text('15 min'),
-                        ),
-                        DropdownMenuItem(
-                          value: 10,
-                          child: Text('20 min'),
-                        ),
-                        DropdownMenuItem(
-                          value: 30,
-                          child: Text('30 min'),
-                        ),
-                        DropdownMenuItem(
-                          value: 100,
-                          child: Text('Manual Off'),
-                        ),
-                      ],
+                    trailing: Selector<SettingsProvider,int>(
+                      selector: (context,prov)=>prov.ringtoneDuration,
+                      builder: (context, dura, child) => DropdownButton(
+                        value: dura,
+                        borderRadius: BorderRadius.circular(10),
+                        onChanged: (value)=>PenthHouseProviders.settingsProvider?.changeRingtoneDuration(value!),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 1,
+                            child: Text('1 min'),
+                          ),
+                          DropdownMenuItem(
+                            value: 5,
+                            child: Text('5 min'),
+                          ),
+                          DropdownMenuItem(
+                            value: 10,
+                            child: Text('10 min'),
+                          ),
+                          DropdownMenuItem(
+                            value: 15,
+                            child: Text('15 min'),
+                          ),
+                          DropdownMenuItem(
+                            value: 20,
+                            child: Text('20 min'),
+                          ),
+                          DropdownMenuItem(
+                            value: 30,
+                            child: Text('30 min'),
+                          ),
+                          DropdownMenuItem(
+                            value: 100,
+                            child: Text('Manual Off'),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  ]
-                ),
+                ],
+              ),
               SingleSection(
                   title: 'Fine Settings',
                   children: [
                     CustomListTile(
                         title: 'Vibrate on Ring',
                         icon: Icons.vibration,
-                        trailing: CupertinoSwitch(value:true, onChanged: (value){}),
-                    ),
+                        trailing: Selector<SettingsProvider,bool>(
+                          selector: (context,prov)=>prov.vibrate,
+                          builder: (context, vibrate, child) => CupertinoSwitch(
+                            value: vibrate,
+                            onChanged: (vibrate) => PenthHouseProviders.settingsProvider!.changeVibrate(),
+                          ),
+                        ),
+                      ),
                     CustomListTile(
                         title: "Upcoming Ring Notification",
                         icon:Icons.notification_add,
-                        trailing: CupertinoSwitch(value:true, onChanged: (value){}),
+                        trailing: Selector<SettingsProvider,bool>(
+                          selector: (context,prov)=>prov.upcomingNotification,
+                          builder: (context, value, child) => CupertinoSwitch(
+                            value: value,
+                            onChanged: (vibrate) => PenthHouseProviders.settingsProvider!.changeUpcomingNotification(),
+                          ),
+                        ),
                     ),
                     CustomListTile(
                       title: "No Ring on Legal Holidays",
@@ -146,19 +162,28 @@ class _MoreSettingPageState extends State<MoreSettingPage> {
 
                       )
                     ),
-                    const CustomListTile(
+                    CustomListTile(
                       title: 'Update Legal Holidays',
-                      icon: Icons.update),
+                      icon: Icons.update,
+                      tapFunc: ()=>PenthHouseProviders.settingsProvider!.updateSkippingHolidays(context),
+                    ),
                     const CustomListTile(
                         title: 'Open Source Notice',
                         icon: Icons.security
                     ),
                   ],
                 ),
+              SizedBox.fromSize(size: const Size.fromHeight(60),),
               ],
             ),
           ),
         ),
       );
+    }
+    @override
+    void dispose(){
+      //关闭数据盒子
+      SettingBox.closeBox();
+      super.dispose();
     }
 }

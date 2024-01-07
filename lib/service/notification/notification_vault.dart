@@ -6,6 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'notification_service.dart';
 
 class NotificationVault {
+  static void remainingTimeUntilAlarm(Duration dura){
+    String remian=DateFormatter.formatDuration(dura);
+    NotificationService.showNotification(title: "Alarm", body: "Will ring in $remian");
+  }
   static void showAlarmFullNotification(int id,Map<String, dynamic>params)async {
     NotificationService.showNotification(title: "Alarm ${params['name']}", body: '${params['desc']}',
         category: NotificationCategory.Alarm,actionType: ActionType.KeepOnTop,

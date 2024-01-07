@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clockie/repository/alarm_box.dart';
 import 'package:clockie/service/invoke_handler.dart';
+import 'package:clockie/service/notification/notification_vault.dart';
 import 'package:clockie/util/formattor.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -118,9 +119,9 @@ class AlarmProvider extends ChangeNotifier {
     if(editingAlarmInd!=-1) {
       removeAlarmFromBoxAndDisregister(editingAlarmInd);
     }
-    bool isOnce=alarmNowSetting.pickNum==0;
-    if(isOnce) {
-      TimeUtil.equipMeanTime(alarmNowSetting);
+    DateTime firstInvokeTime=TimeUtil.getFirstInvokeTime(alarmNowSetting);
+    if(alarmNowSetting.pickNum==0) {
+      alarmNowSetting.setMeanTime(firstInvokeTime);
     }
     String id=await AlarmManager.smartSetAlarm(alarmNowSetting,InvokeHandler.notifyAndSmartTurnOff);
     alarmNowSetting.id = id;
@@ -133,6 +134,7 @@ class AlarmProvider extends ChangeNotifier {
     AlarmBox.box.put(id, alarmNowSetting);
     alarmNowSetting=Alarm.active();//重置,如果仍在原来的alarmNowSetting上修改，会影响到alarmList里的变量
     if(editingAlarmInd!=-1)editingAlarmInd=-1;//不要忘了把这个标志位重置
+    NotificationVault.remainingTimeUntilAlarm(firstInvokeTime.difference(DateTime.now()));
     notifyListeners();
   }
   Future<void> initData() async {

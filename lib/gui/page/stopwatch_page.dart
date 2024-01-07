@@ -109,6 +109,9 @@ class _StopwatchPageState extends State<StopwatchPage> with AutomaticKeepAliveCl
               height: 60.h,
             ),
             const StopWatchWidget(),
+            SizedBox(
+              height: 10.h,
+            ),
             lapsListWidget(),
           ],
         ),

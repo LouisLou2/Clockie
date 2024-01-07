@@ -45,15 +45,30 @@ class TimeUtil{
     DateTime now=DateTime.now();
     return now.hour>alarm.hour||(now.hour==alarm.hour&&now.minute>=alarm.min);
   }
-  static void equipMeanTime(Alarm alarm){
+  static DateTime getFirstInvokeTime(Alarm alarm){
     DateTime now=DateTime.now();
-    if(isTheAlarmShouldInTomorrow(alarm)) {
+    if(alarm.pickNum==0){
       now=DateTime(now.year,now.month,now.day,alarm.hour,alarm.min);
-      //说明此闹钟应在明天
-      alarm.meantTime=DateFormatter.format(now.add(const Duration(days:1)), DateFormatter.DATE_TIME_FORMAT);
-    }else{
-      now=DateTime(now.year,now.month,now.day,alarm.hour,alarm.min);
-      alarm.meantTime=DateFormatter.format(now, DateFormatter.DATE_TIME_FORMAT);
+      if(isTheAlarmShouldInTomorrow(alarm)) {
+        now=now.add(const Duration(days: 1));
+      }
+      return now;
     }
+    for(int i=now.weekday-1;i<alarm.pickNum;i=(i+1)%7){
+      if(alarm.days[i]){
+        now=getFirstInvokeTimeWithWeekday(alarm, i+1);
+      }
+    }
+    return now;
+  }
+  static DateTime getFirstInvokeTimeWithWeekday(Alarm time,int targetWeekday){
+    DateTime nowtime = DateTime.now();
+    DateTime aTime = DateTime(nowtime.year, nowtime.month, nowtime.day, time.hour, time.min);
+    if(aTime.weekday<targetWeekday||aTime.weekday==targetWeekday&&nowtime.isBefore(aTime)){
+      aTime = aTime.add(Duration(days: targetWeekday-aTime.weekday));
+      return aTime;
+    }
+    aTime = aTime.add(Duration(days: 7-aTime.weekday+targetWeekday));
+    return aTime;
   }
 }

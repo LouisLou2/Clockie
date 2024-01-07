@@ -1,4 +1,5 @@
 import 'package:clockie/constant/styles/app_styles.dart';
+import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:clockie/service/provider/stopwatch_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,21 +14,27 @@ class LapTimes extends StatefulWidget {
 
 class _LapTimesState extends State<LapTimes> {
 
-  Consumer<StopWatchProvider> _lapTimesListView() => Consumer<StopWatchProvider>(
+  Widget _lapTimesListView() =>  Selector<StopWatchProvider,int>(
+    selector: (context,provider)=>provider.lapList.length,
     builder:(context, value, child) => SizedBox(
       height: 230.h,
       width: 220.w,
       child: ListView.builder(
-        itemCount: value.lapList.length,
-        itemBuilder: (context, index) => SizedBox(height: 50,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("${value.lapList[index].lapNumber}.",style: AppStyles.timeTxtStyleN),
-              Text(value.lapList[index].lapTime,style: AppStyles.timeTxtStyleN),
-            ],
-          )
-        ),
+        itemCount: value,
+        itemBuilder: (context, index) {
+          var sprov=PenthHouseProviders.stopWatchProvider;
+          return SizedBox(height: 45,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("${sprov!.lapList[index].lapNumber}.",
+                    style: AppStyles.timeTxtStyleN),
+                Text(sprov.lapList[index].lapTime,
+                    style: AppStyles.timeTxtStyleN),
+              ],
+            )
+          );
+        }
       ),
     ),
   );
@@ -48,7 +55,7 @@ class _LapTimesState extends State<LapTimes> {
             ),
           ),
          const Padding(
-           padding: EdgeInsets.only(top:30),
+           padding: EdgeInsets.only(top:10),
            child:Divider(
              height:1,
              indent: 0,

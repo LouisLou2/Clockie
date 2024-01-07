@@ -1,6 +1,8 @@
 
 import 'package:hive/hive.dart';
 
+import '../util/formattor.dart';
+
 @HiveType(typeId: 1)
 class Alarm {
   static const int fieldsNum=9;
@@ -74,6 +76,9 @@ class Alarm {
   }
   String get timeStr {
     return '${hour >= 10 ? '$hour' : '0$hour'}:${min >= 10 ? '$min' : '0$min'}';
+  }
+  void setMeanTime(DateTime time){
+    meantTime=DateFormatter.format(time, DateFormatter.DATE_TIME_FORMAT);
   }
   static copyWith(Alarm alarm){
     return Alarm(

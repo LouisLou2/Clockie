@@ -19,7 +19,7 @@ class SingleSection extends StatelessWidget{
               padding:const EdgeInsets.fromLTRB(15, 8, 9, 10),
               child:Text(
                 title,
-                style:AppStyles.h2Style,
+                style:AppStyles.h3Style,
               )
           ),
           const Divider(

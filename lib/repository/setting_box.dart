@@ -8,6 +8,10 @@ class SettingBox {
   static const String availableIdKey = 'alarmAvailableId';
   static const String themeCodeKey = 'themeCode';
   static const String skippingHolidaysKey = 'skippingHolidays';
+  static const String ringtoneDurationKey = 'ringtoneDuration';
+  static const String vibrateKey = 'vibrate';
+  static const String upcomingNotificationKey = 'upcomingNotification';
+
   static late Box<int> box;
   // 检查指定名称的 Hive 数据盒子是否已经打开
   static bool isBoxOpen() => Hive.isBoxOpen(name);
@@ -65,5 +69,25 @@ class SettingBox {
       return false;
     }
     return value==1;
+  }
+  static int getRingtoneDuration() {
+    return box.get(ringtoneDurationKey)??1;
+  }
+  static void setRingtoneDuration(int duration) {
+    box.put(ringtoneDurationKey, duration);
+  }
+  static bool getVibrate() {
+    int value=box.get(vibrateKey)??0;
+    return value==1;
+  }
+  static bool getUpcomingNotification() {
+    int value=box.get(upcomingNotificationKey)??0;
+    return value==1;
+  }
+  static void setVibrate(bool vibrate) {
+    box.put(vibrateKey, vibrate?1:0);
+  }
+  static void setUpcomingNotification(bool upcomingNotification) {
+    box.put(upcomingNotificationKey, upcomingNotification?1:0);
   }
 }

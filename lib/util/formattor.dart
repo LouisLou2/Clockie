@@ -11,6 +11,13 @@ class DateFormatter {
   static const String DATE_TIME_FORMAT_4 = "yyyy-MM-dd HH:mm:ss.SSS";
   static const String ONLY_HOUR_MIN="HH:mm";
   static const String ONLY_MONTH_DAY="MM-dd";
+  static String formatDuration(Duration duration) {
+    int days = duration.inDays;
+    int hours = duration.inHours.remainder(24);
+    int minutes = duration.inMinutes.remainder(60);
+    if(days==0&&hours==0&&minutes==0)return "less than 1 minutes";
+    return "${days==0?'':'$days days '}${hours==0?'':'$hours hours '} ${minutes==0?'':'$minutes minutes'}";
+  }
   static String format(DateTime date, String format) {
     return DateFormat(format).format(date);
   }

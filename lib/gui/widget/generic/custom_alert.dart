@@ -32,6 +32,9 @@ void showSimpleSnackBar(BuildContext context,String info) {
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
+void showSnackBarTooFrequently(BuildContext context){
+  showSimpleSnackBar(context, "Query too frequently");
+}
 Widget alarmDialog(BuildContext context,String title,String desc){
   return AlertDialog(
     title: Text(title,style: AppStyles.h1Style,),

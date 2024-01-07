@@ -1,6 +1,6 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:clockie/model/alarm_model.dart';
-import 'package:clockie/model/base_time.dart';
+import 'package:clockie/util/time_util.dart';
 import 'package:tuple/tuple.dart';
 
 import 'alarm_isolate_handler.dart';
@@ -39,25 +39,6 @@ class AlarmManager{
     }
     return idAndWeekdays;
   }
-  static DateTime _getFirstInvokeTime(HourMin time) {
-    upadateNowTime();
-    DateTime invoketime = DateTime(nowtime.year, nowtime.month, nowtime.day, time.hour, time.min);
-    if(invoketime.isBefore(nowtime)) {
-      invoketime = invoketime.add(const Duration(days: 1));
-    }
-    return invoketime;
-  }
-
-  static DateTime _getFirstInvokeTimeWithWeekday(HourMin time,int targetWeekday){
-    upadateNowTime();
-    DateTime aTime = DateTime(nowtime.year, nowtime.month, nowtime.day, time.hour, time.min);
-    if(aTime.weekday<targetWeekday||aTime.weekday==targetWeekday&&nowtime.isBefore(aTime)){
-      aTime = aTime.add(Duration(days: targetWeekday-aTime.weekday));
-      return aTime;
-    }
-    aTime = aTime.add(Duration(days: 7-aTime.weekday+targetWeekday));
-    return aTime;
-  }
 
   static Future<String> smartSetAlarm(Alarm alarm, Function doThingsWhenInvoke) async{
     if(_idAvailable==-1)await initAvailableId();
@@ -65,7 +46,7 @@ class AlarmManager{
     Map<String,dynamic>aparams=getStanderedParam(alarm);
 
     if(alarm.pickNum==0){
-      singleId=await _setAlarmTimeOnce(HourMin(alarm.hour, alarm.min), doThingsWhenInvoke,aparams);
+      singleId=await _setAlarmTimeOnce(alarm, doThingsWhenInvoke,aparams);
       return singleId.toString();
     }
     else{
@@ -79,7 +60,7 @@ class AlarmManager{
       String unitId=buf.toString();
       alarm.id=unitId;
       for(int i=0;i<ids.length;++i){
-        setAlarmForLoop(id:ids[i].item2, unitId: unitId, alarm:alarm, time: _getFirstInvokeTimeWithWeekday(HourMin(alarm.hour,alarm.min),ids[i].item1), doThingsWhenInvoke: doThingsWhenInvoke, aparams: aparams);
+        setAlarmForLoop(id:ids[i].item2, unitId: unitId, alarm:alarm, time: TimeUtil.getFirstInvokeTimeWithWeekday(alarm,ids[i].item1), doThingsWhenInvoke: doThingsWhenInvoke, aparams: aparams);
       }
       return unitId;
     }
@@ -87,22 +68,22 @@ class AlarmManager{
   static Future<void> smartSetAlarmWithExistingId(Alarm alarm, Function doThingsWhenInvoke) async{
     Map<String,dynamic>aparams=getStanderedParam(alarm);
     if(alarm.pickNum==0){
-      _setAlarmTimeOnceWithExistingId(int.parse(alarm.id),HourMin(alarm.hour, alarm.min), doThingsWhenInvoke,aparams);
+      _setAlarmTimeOnceWithExistingId(int.parse(alarm.id),alarm, doThingsWhenInvoke,aparams);
     }
     else{
       final List<Tuple2<int,int>>ids=_findBelong(alarm);
 
       for(int i=0;i<ids.length;++i){
-        setAlarmForLoop(id:ids[i].item2, unitId: alarm.id, alarm:alarm, time: _getFirstInvokeTimeWithWeekday(HourMin(alarm.hour,alarm.min),ids[i].item1), doThingsWhenInvoke: doThingsWhenInvoke, aparams: aparams);
+        setAlarmForLoop(id:ids[i].item2, unitId: alarm.id, alarm:alarm, time: TimeUtil.getFirstInvokeTimeWithWeekday(alarm,ids[i].item1), doThingsWhenInvoke: doThingsWhenInvoke, aparams: aparams);
       }
     }
   }
-  static Future<int> _setAlarmTimeOnce(HourMin time, Function doThingsWhenInvoke,Map<String, dynamic>?aparams) async {
+  static Future<int> _setAlarmTimeOnce(Alarm time, Function doThingsWhenInvoke,Map<String, dynamic>?aparams) async {
     aparams ??= Map.from(defaultAlarmParams);
     aparams['isOnce']=true;
     int id=_getAvailableId();
     aparams['id']=id.toString();
-    AndroidAlarmManager.oneShotAt(_getFirstInvokeTime(time), id, doThingsWhenInvoke,
+    AndroidAlarmManager.oneShotAt(TimeUtil.getFirstInvokeTime(time), id, doThingsWhenInvoke,
         exact: true,
         wakeup: true,
         alarmClock: true,
@@ -112,11 +93,11 @@ class AlarmManager{
     );
     return id;
   }
-  static Future<void> _setAlarmTimeOnceWithExistingId(int id,HourMin time, Function doThingsWhenInvoke,Map<String, dynamic>?aparams) async {
+  static Future<void> _setAlarmTimeOnceWithExistingId(int id,Alarm time, Function doThingsWhenInvoke,Map<String, dynamic>?aparams) async {
     aparams ??= Map.from(defaultAlarmParams);
     aparams['isOnce']=true;
     aparams['id']=id.toString();
-    AndroidAlarmManager.oneShotAt(_getFirstInvokeTime(time), id, doThingsWhenInvoke,
+    AndroidAlarmManager.oneShotAt(TimeUtil.getFirstInvokeTime(time), id, doThingsWhenInvoke,
       exact: true,
       wakeup: true,
       alarmClock: true,
