@@ -12,8 +12,14 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
-        mavenCentral()
+//        google()
+//        mavenCentral()
+        maven { url 'https://maven.aliyun.com/repository/google'
+            allowInsecureProtocol = true}
+        maven { url 'https://maven.aliyun.com/repository/jcenter'
+            allowInsecureProtocol = true}
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public'
+            allowInsecureProtocol = true}
     }
 }
 

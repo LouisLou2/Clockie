@@ -44,7 +44,7 @@ class SettingBox {
       // 如果没有可用 ID，将其设置为 0 并存储到数据盒子中
       wrappedId = 0;
       box.put(availableIdKey, wrappedId);
-      return 0;
+      return wrappedId;
     }
     return wrappedId;
   }

@@ -195,6 +195,7 @@ class AlarmProvider extends ChangeNotifier {
         AlarmManager.cancelAlarm(aid);
       }
     } else {
+      theAlarm.setMeanTime(TimeUtil.getFirstInvokeTime(theAlarm));
       AlarmManager.smartSetAlarmWithExistingId(theAlarm, InvokeHandler.notifyAndSmartTurnOff);
     }
     notifyListeners();
