@@ -4,7 +4,6 @@ import 'package:clockie/constant/styles/style.dart';
 import 'package:clockie/global_context.dart';
 import 'package:clockie/gui/page/stopwatch_page.dart';
 import 'package:clockie/service/navigation/navigator_manager.dart';
-import 'package:clockie/service/network_service.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:clockie/service/provider/theme_provider.dart';
 import 'package:flutter/cupertino.dart';

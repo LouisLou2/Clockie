@@ -83,6 +83,7 @@ class AlarmManager{
     aparams['isOnce']=true;
     int id=_getAvailableId();
     aparams['id']=id.toString();
+    var t=TimeUtil.getFirstInvokeTime(time);
     AndroidAlarmManager.oneShotAt(TimeUtil.getFirstInvokeTime(time), id, doThingsWhenInvoke,
         exact: true,
         wakeup: true,
