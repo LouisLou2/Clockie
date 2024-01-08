@@ -6,6 +6,7 @@ import 'package:clockie/service/notification/notification_vault.dart';
 import 'package:flutter/Material.dart';
 
 class TimerProvider extends ChangeNotifier{
+  static const mostHour=24;
   BuildContext? timerPageContext;
   int _hour=0;
   int _min=0;
@@ -21,9 +22,9 @@ class TimerProvider extends ChangeNotifier{
   get isRunning=>_isRunning;
   get timerActive=>_timer?.isActive;
   //setters
-  set hour(int hour)=>_hour=hour;
-  set min(int minute)=>_min=minute;
-  set sec(int second)=>_sec=second;
+  set hour(int hour)=>_hour=hour%mostHour;
+  set min(int minute)=>_min=minute%60;
+  set sec(int second)=>_sec=second%60;
   set secSum(int milliSum)=>_milliSum=milliSum;
 
   void _timerChangeCallback(Timer timer)async{
