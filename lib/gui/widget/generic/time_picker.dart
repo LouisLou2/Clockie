@@ -36,7 +36,7 @@ Widget oneTimePicker({
         magnification: 1.2,
         itemExtent: WidgetSetting.listWheelItemExtent,
         diameterRatio: WidgetSetting.listWheelDiameterRatio,//滚轮的直径与视口直径的比率
-        onSelectedItemChanged: onSelectedItemChanged,
+        onSelectedItemChanged: (value)=>onSelectedItemChanged(value%itemCount),
         physics: const RangeMaintainingScrollPhysics(),//滚轮的物理特性: FixedExtentScrollPhysics()固定大小的滚轮
         childDelegate: ListWheelChildLoopingListDelegate(
           children: List<Widget>.generate(itemCount, (index) {
@@ -64,7 +64,6 @@ Widget FullTimePicker({
 }) {
   double yoffset = 0;
   if(secondController!=null) yoffset = WidgetSetting.timePickerTitleDistance;
-
   assert((secondController==null)==(onSecondChanged==null));
   List<Widget>widgetList = [
     oneTimePicker(
