@@ -16,7 +16,7 @@ class SettingsProvider extends ChangeNotifier {
 
   void init(){
     skippingHolidays =SettingBox.getSkippingHolidays();
-    ringtoneDuration=SettingBox.getRingtoneDuration();
+    ringtoneDuration=SettingBox.getRingtoneDuration()!;
     vibrate=SettingBox.getVibrate();
     upcomingNotification=SettingBox.getUpcomingNotification();
   }

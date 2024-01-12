@@ -1,3 +1,4 @@
+import 'package:clockie/service/player.dart';
 import 'package:hive/hive.dart';
 bool haveCleanedUp=false;
 bool isCleaning=false;
@@ -10,4 +11,5 @@ void cleanUp()async{
   await Hive.close();
   haveCleanedUp=true;
   isCleaning=false;
+  GlobalAudioPlayer.dispose();
 }

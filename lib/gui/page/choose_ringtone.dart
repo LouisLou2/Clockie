@@ -1,11 +1,15 @@
+import 'package:clockie/constant/location_collection.dart';
 import 'package:clockie/constant/styles/app_styles.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:clockie/service/provider/resource_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 
-class GridViewExampleApp extends StatelessWidget {
-  const GridViewExampleApp({super.key});
+import '../../service/player.dart';
+
+class ChooseRingtone extends StatelessWidget {
+  const ChooseRingtone({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,33 +18,59 @@ class GridViewExampleApp extends StatelessWidget {
       appBar: AppBar(
         title:const Text("Chose Ringtone",style: AppStyles.h1Style,)
       ),
-      body:GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // 每行显示两个卡片
-        ),
-        itemCount: rprov.musicGenre.length,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: () {},
-            child:SizedBox(
-              height: 300,
-              width: 200,
-              child:Column(
-                children:[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child:Image.asset(
-                      'images/${rprov.musicGenre[index].item2}', // 图片路径
-                      width: 180,
-                      height: 180, // 设置图片高度
-                    ),
-                  ),
-                  Text(rprov.musicGenre[index].item1,style:AppStyles.subTitleStyle)
-                ]
-              ),
-            ),
-          );
+      body:PopScope(
+        canPop: true,
+        onPopInvoked: (bool didPop){
+          GlobalAudioPlayer.instance.stop();
+          GlobalAudioPlayer.instance.release();
         },
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // 每行显示两个卡片
+          ),
+          itemCount: rprov.musicGenre.length,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTap: ()=>rprov.chooseRingtone(index),
+              child:SizedBox(
+                height: 300,
+                width: 200,
+                child:Stack(
+                    alignment: Alignment.bottomCenter,
+                    children:[
+                      Selector<ResourceProvider,int>(
+                        selector: (context,prov)=>prov.ringtoneIndex,
+                        builder:(context,value,prov)=>Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16.2),
+                            border: Border.all(
+                              color:value==index?Colors.blue:Colors.transparent,
+                              width:6,
+                            ),
+                          ),
+                          child:Padding(
+                            padding:const EdgeInsets.all(3),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child:Image.asset(
+                                LocationCollector.imagePrefix+rprov.musicGenre[index].item2, // 图片路径
+                                width: 180,
+                                height: 180, // 设置图片高度
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 10,
+                        child: Text(rprov.musicGenre[index].item1,style:AppStyles.cardLine),
+                      ),
+                    ]
+                ),
+              ),
+            );
+          },
+        )
       ),
     );
   }

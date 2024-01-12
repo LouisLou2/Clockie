@@ -31,4 +31,6 @@ class AppStyles {
 
   static final BorderRadius genericButtonBorderRadius = BorderRadius.circular(25);
   static final BorderRadius genericCardBorderRadius = BorderRadius.circular(20);
+
+  static const TextStyle cardLine=TextStyle(fontSize: 17,fontFamily: "Poppins", color:softWhite, fontWeight: FontWeight.w500);
 }

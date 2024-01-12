@@ -11,6 +11,7 @@ import 'package:clockie/repository/timediff_box.dart';
 import 'package:clockie/service/alarm_manager.dart';
 import 'package:clockie/service/navigation/navigator_manager.dart';
 import 'package:clockie/service/notification/notification_service.dart';
+import 'package:clockie/service/player.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -24,8 +25,10 @@ Future<void>initMustBeforeRunApp()async {
   registerHiveAdapter();
   await SettingBox.openBox();
   AlarmManager.initAvailableId();
+  PenthHouseProviders.resourceProvider!.init();
   PenthHouseProviders.settingsProvider!.init();
   PenthHouseProviders.themeProvider!.init();
+  GlobalAudioPlayer.init();
 }
 Future<void> initNormally() async{
   AlarmBox.openBox();

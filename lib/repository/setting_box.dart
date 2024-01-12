@@ -11,6 +11,7 @@ class SettingBox {
   static const String ringtoneDurationKey = 'ringtoneDuration';
   static const String vibrateKey = 'vibrate';
   static const String upcomingNotificationKey = 'upcomingNotification';
+  static const String ringtoneChosenKey="ringtone";
 
   static late Box<int> box;
   // 检查指定名称的 Hive 数据盒子是否已经打开
@@ -70,8 +71,11 @@ class SettingBox {
     }
     return value==1;
   }
-  static int getRingtoneDuration() {
-    return box.get(ringtoneDurationKey)??1;
+  static int? getRingtoneDuration() {
+    return box.get(
+      ringtoneDurationKey,
+      defaultValue: 1,
+    );
   }
   static void setRingtoneDuration(int duration) {
     box.put(ringtoneDurationKey, duration);
@@ -89,5 +93,14 @@ class SettingBox {
   }
   static void setUpcomingNotification(bool upcomingNotification) {
     box.put(upcomingNotificationKey, upcomingNotification?1:0);
+  }
+  static int? getRingtoneChosen(){
+    return box.get(
+      ringtoneChosenKey,
+      defaultValue: -1,
+    );
+  }
+  static void setRingtoneChosen(int index){
+    box.put(ringtoneChosenKey,index);
   }
 }
