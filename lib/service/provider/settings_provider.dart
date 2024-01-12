@@ -71,4 +71,9 @@ class SettingsProvider extends ChangeNotifier {
         showSimpleSnackBar(context, '✔ Holidays data updated');
     }
   }
+  @override
+  void dispose() {
+    SettingBox.closeBox();
+    super.dispose();
+  }
 }

@@ -1,4 +1,5 @@
 //create a normal page, no matter what the page is, because this is a unfinished page , I'll do it later
+import 'package:clockie/global_context.dart';
 import 'package:clockie/gui/widget/generic/custom_button.dart';
 import 'package:clockie/gui/widget/generic/custom_alert.dart';
 import 'package:clockie/gui/widget/generic/loading_widget.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant/styles/app_styles.dart';
-import '../../model/alarm_model.dart';
 import '../../service/provider/alarm_provider.dart';
 import '../widget/alarm/alarm_card.dart';
 import '../widget/generic/bottom_oper.dart';
@@ -42,35 +42,11 @@ class _AlarmPageState extends State<AlarmPage> with AutomaticKeepAliveClientMixi
 
   @override
   Widget build(BuildContext context) {
+    GlobalContext.tabContext=context;
     super.build(context);
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          children:[
-            const Text("Alarms",style: AppStyles.h1Style,),
-            Selector<AlarmProvider,bool>(
-              selector: (context,prov)=>prov.shouldRing,
-              builder: (context,value,child){
-                if(!value){
-                  return const SizedBox.shrink();
-                }
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  // 使用addPostFrameCallback确保Dialog在build完成后显示，避免可能的问题
-                  showDialog<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      String alarmId=PenthHouseProviders.alarmProvider!.alarmNowRinging;
-                      Alarm alarm=PenthHouseProviders.alarmProvider!.getAlarm(alarmId);
-                      PenthHouseProviders.alarmProvider!.shutDownAlarm();
-                      return alarmDialog(context,alarm.name!=""?alarm.name:"Untitled Alarm",alarm.desc!=""?alarm.desc:"No Description");
-                    },
-                  );
-                });
-                return const SizedBox.shrink();
-              },
-            )
-          ]
-        ),
+        title: const Text("Alarms",style: AppStyles.h1Style,),
         elevation: 0,
         toolbarHeight: 70,
         actions: [

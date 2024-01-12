@@ -5,6 +5,7 @@ import 'package:flutter/Material.dart';
 import 'package:tuple/tuple.dart';
 
 class ResourceProvider with ChangeNotifier {
+  final String playerName=AudioPlayerManager.trailListenName;
   List<Tuple3<String,String,String>>musicGenre=[
     const Tuple3("Electronic", "electronic.jpg","PastLife-Currents.mp3"),
     const Tuple3("Progress Rock", "progress_rock.jpg","Clean-1989.mp3"),
@@ -24,8 +25,14 @@ class ResourceProvider with ChangeNotifier {
     if(index==ringtoneIndex)return;
     ringtoneIndex=index;
     SettingBox.setRingtoneChosen(index);
-    await GlobalAudioPlayer.instance.stop();
-    GlobalAudioPlayer.instance.play(AssetSource(musicGenre[index].item3));
+    AudioPlayerManager.dispose(name: playerName);
+    AudioPlayerManager.getNewInstance(name:playerName).play(AssetSource(musicGenre[index].item3));
     notifyListeners();
+  }
+  String get chosenRingtonePath=>musicGenre[ringtoneIndex].item3;
+  @override
+  void dispose() {
+    AudioPlayerManager.disposeAll();
+    super.dispose();
   }
 }

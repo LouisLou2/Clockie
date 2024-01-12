@@ -1,3 +1,4 @@
+import 'package:clockie/repository/box_manager.dart';
 import 'package:clockie/service/network_service.dart';
 import 'package:clockie/util/formattor.dart';
 import 'package:hive/hive.dart';
@@ -5,7 +6,7 @@ import 'package:hive/hive.dart';
 class HolidaysRepo {
   static Set<String>?holidays;
   static late Box<Set<String>> box;
-  static const String boxName='holidayBox';
+  static const String boxName=BoxManager.holidayBoxName;
   static bool isUpdating=false;
   static String formator=DateFormatter.DATE_FORMAT;
   static bool isBoxOpen()=>Hive.isBoxOpen(boxName);

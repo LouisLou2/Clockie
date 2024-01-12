@@ -1,18 +1,23 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:clockie/repository/alarm_box.dart';
 import 'package:clockie/service/invoke_handler.dart';
 import 'package:clockie/service/notification/notification_vault.dart';
+import 'package:clockie/service/player.dart';
+import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:clockie/util/formattor.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../gui/widget/generic/custom_alert.dart';
 import '../../model/alarm_model.dart';
 import '../../util/time_util.dart';
 import '../alarm_manager.dart';
 
 class AlarmProvider extends ChangeNotifier {
   bool shouldRing=false;
+  bool nowRinging=false;
   String alarmNowRinging="";
   Alarm alarmNowSetting = Alarm.active();
   int editingAlarmInd = -1;//这里说明正在设置一个先前已经存在的闹钟，设置这个标着的目的就是，先前已经存在的闹钟，先要先把原来的取消掉
@@ -22,7 +27,7 @@ class AlarmProvider extends ChangeNotifier {
   bool get isDataInited => dataInited;
   int get alarmNum => ids.length;
   bool isInitingData=false;//是否正在初始化数据，引入这个变量是因为由于异步的原因，initData()可能会被多次调用，所以只调用一次
-
+  final String playerName=AudioPlayerManager.alarmPlayName;
   void giveupEditing(){
     if(editingAlarmInd==-1)return;
     editingAlarmInd=-1;
@@ -131,6 +136,7 @@ class AlarmProvider extends ChangeNotifier {
       ids.add(id);
       selected.add(false);
     }
+    alarmNowSetting.isActive=true;
     AlarmBox.box.put(id, alarmNowSetting);
     alarmNowSetting=Alarm.active();//重置,如果仍在原来的alarmNowSetting上修改，会影响到alarmList里的变量
     if(editingAlarmInd!=-1)editingAlarmInd=-1;//不要忘了把这个标志位重置
@@ -202,11 +208,21 @@ class AlarmProvider extends ChangeNotifier {
   }
   void ringAlarm(String id){
     alarmNowRinging=id;
+    if(nowRinging){
+      AudioPlayerManager.dispose(name: playerName);
+    }
     shouldRing=true;
-    notifyListeners();
+    nowRinging=true;
+    var player=AudioPlayerManager.getNewInstance(name: AudioPlayerManager.alarmPlayName);
+    player.play(AssetSource(PenthHouseProviders.resourceProvider!.chosenRingtonePath));
+    String alarmId=PenthHouseProviders.alarmProvider!.alarmNowRinging;
+    Alarm alarm=PenthHouseProviders.alarmProvider!.getAlarm(alarmId);
+    showAlarmRingDialog(alarm);
   }
   void shutDownAlarm(){
+    AudioPlayerManager.dispose(name: playerName);
     shouldRing=false;
+    nowRinging=false;
   }
   @override
   void dispose(){

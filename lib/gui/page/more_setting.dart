@@ -1,4 +1,3 @@
-import 'package:clockie/repository/setting_box.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:clockie/service/provider/settings_provider.dart';
 import 'package:clockie/service/provider/theme_provider.dart';
@@ -44,7 +43,7 @@ class _MoreSettingPageState extends State<MoreSettingPage> {
                   CustomListTile(
                     title:'Timer Expiry Ringtone',
                     icon:Icons.music_note,
-                    tapFunc: () => Navigator.pushNamed(context, '/alarm/more/ringtone'),
+                    tapFunc: () {/*Navigator.pushNamed(context, '/alarm/more/ringtone');*/},
                   ),
                   const CustomListTile(
                     title:'Ringtone Volume',
@@ -182,8 +181,6 @@ class _MoreSettingPageState extends State<MoreSettingPage> {
     }
     @override
     void dispose(){
-      //关闭数据盒子
-      SettingBox.closeBox();
       super.dispose();
     }
 }

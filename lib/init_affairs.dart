@@ -28,7 +28,7 @@ Future<void>initMustBeforeRunApp()async {
   PenthHouseProviders.resourceProvider!.init();
   PenthHouseProviders.settingsProvider!.init();
   PenthHouseProviders.themeProvider!.init();
-  GlobalAudioPlayer.init();
+  AudioPlayerManager.init();
 }
 Future<void> initNormally() async{
   AlarmBox.openBox();

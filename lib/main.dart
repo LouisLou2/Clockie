@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
       builder: (context, child) => Selector<ThemeProvider,bool>(
         selector: (context,prov)=>prov.curTheme,
         builder: (context, value, Widget? child) {
-          GlobalContext.appContext=context;
+          GlobalContext.tabContext=context;
           if(firstLaunch&&PenthHouseProviders.themeProvider!.withSys){
             firstLaunch=false;
             value=MediaQuery.platformBrightnessOf(context)==Brightness.light;
@@ -88,6 +88,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
             theme: ThemeVault.getThemeByBrightness(value),
             home: const Tab(),
             routes: NavigatorManager.routes, //注册路由表
+            localizationsDelegates: const [
+              // 本地化的代理类
+              DefaultMaterialLocalizations.delegate,
+              DefaultWidgetsLocalizations.delegate,
+              DefaultCupertinoLocalizations.delegate,
+            ],
           );
         }
       ),
@@ -110,6 +116,7 @@ class Tab extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    GlobalContext.tabContext=context;
     return DefaultTabController(
       length: 4,
       initialIndex: 0,

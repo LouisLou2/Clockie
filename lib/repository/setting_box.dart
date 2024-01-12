@@ -97,7 +97,7 @@ class SettingBox {
   static int? getRingtoneChosen(){
     return box.get(
       ringtoneChosenKey,
-      defaultValue: -1,
+      defaultValue: 0,
     );
   }
   static void setRingtoneChosen(int index){

@@ -1,5 +1,9 @@
 import 'package:clockie/constant/styles/app_styles.dart';
+import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:flutter/Material.dart';
+
+import '../../../global_context.dart';
+import '../../../model/alarm_model.dart';
 
 void showFloatingSnackBar(BuildContext context,String info) {
   final snackBar = SnackBar(
@@ -43,15 +47,25 @@ Widget alarmDialog(BuildContext context,String title,String desc){
       TextButton(
         child: const Text('Shut Down',style: AppStyles.smallButtonTxt,),
         onPressed: () {
+          PenthHouseProviders.alarmProvider!.shutDownAlarm();
           Navigator.of(context).pop();
         },
       ),
       TextButton(
         child: const Text('Remind Later',style: AppStyles.smallButtonTxt,),
         onPressed: () {
+          PenthHouseProviders.alarmProvider!.shutDownAlarm();
           Navigator.of(context).pop();
         },
       ),
     ],
+  );
+}
+void showAlarmRingDialog(Alarm alarm){
+  showDialog<void>(
+    context: GlobalContext.tabContext!,
+    builder: (BuildContext context) {
+      return alarmDialog(context,alarm.name!=""?alarm.name:"Untitled Alarm",alarm.desc!=""?alarm.desc:"No Description");
+    },
   );
 }

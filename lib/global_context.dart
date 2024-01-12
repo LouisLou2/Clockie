@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
 
 class GlobalContext{
-  static BuildContext? appContext;
+  static BuildContext? tabContext;
 }

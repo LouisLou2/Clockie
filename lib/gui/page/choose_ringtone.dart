@@ -21,8 +21,7 @@ class ChooseRingtone extends StatelessWidget {
       body:PopScope(
         canPop: true,
         onPopInvoked: (bool didPop){
-          GlobalAudioPlayer.instance.stop();
-          GlobalAudioPlayer.instance.release();
+          AudioPlayerManager.dispose(name: AudioPlayerManager.trailListenName);
         },
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

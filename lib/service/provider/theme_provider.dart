@@ -36,7 +36,7 @@ class ThemeProvider with ChangeNotifier {
   }
   void onPlatFormBrightnessChange(){
     if(!withSys)return;
-    bool nowSysTheme=MediaQuery.platformBrightnessOf(GlobalContext.appContext!)==Brightness.light;
+    bool nowSysTheme=MediaQuery.platformBrightnessOf(GlobalContext.tabContext!)==Brightness.light;
     if(curTheme==nowSysTheme)return;
     curTheme=nowSysTheme;
     changeNavbar();
