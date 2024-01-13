@@ -7,6 +7,10 @@ import '../../gui/page/select_city_clock.dart';
 
 class NavigatorManager{
   static late Map<String,WidgetBuilder> routes;
+  static const String addAlarmPath='/alarm/add';
+  static const String settingPath='/alarm/more';
+  static const String selectCityPath='/world_clock/select';
+  static const String ringtonePath='/alarm/more/ringtone';
   static init(){
     routes={
       '/alarm/add': (BuildContext context)=>const AddAlarmPage(),

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant/styles/app_styles.dart';
+import '../../service/navigation/navigator_manager.dart';
 import '../widget/generic/clock_now.dart';
 import '../widget/world_clock/city_time_list.dart';
 
@@ -58,7 +59,7 @@ class _WorldClockPageState extends State<WorldClockPage> with AutomaticKeepAlive
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot)=>Text(TimeUtil.getNativeDateStr(),style: AppStyles.subTxtStyle),
             ),
             trailing: IconButton(
-              onPressed:() {Navigator.pushNamed(context, '/world_clock/select');},
+              onPressed:() {Navigator.pushNamed(context, NavigatorManager.selectCityPath);},
               icon: const Icon(Icons.add_location_alt_outlined,size:30),
             ),
           ),

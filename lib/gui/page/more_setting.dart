@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../constant/styles/app_styles.dart';
+import '../../service/navigation/navigator_manager.dart';
 import '../widget/more_setting/custome_list_tile.dart';
 import '../widget/more_setting/single_section.dart';
 
@@ -38,7 +39,7 @@ class _MoreSettingPageState extends State<MoreSettingPage> {
                   CustomListTile(
                       title:'Ringtone',
                       icon:Icons.music_note,
-                      tapFunc: () => Navigator.pushNamed(context, '/alarm/more/ringtone'),
+                      tapFunc: () => Navigator.pushNamed(context, NavigatorManager.ringtonePath),
                     ),
                   CustomListTile(
                     title:'Timer Expiry Ringtone',

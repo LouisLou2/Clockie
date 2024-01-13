@@ -4,7 +4,6 @@ import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:clockie/service/provider/theme_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import 'package:clockie/constant/styles/app_styles.dart';

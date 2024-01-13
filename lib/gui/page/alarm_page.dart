@@ -3,6 +3,7 @@ import 'package:clockie/global_context.dart';
 import 'package:clockie/gui/widget/generic/custom_button.dart';
 import 'package:clockie/gui/widget/generic/custom_alert.dart';
 import 'package:clockie/gui/widget/generic/loading_widget.dart';
+import 'package:clockie/service/navigation/navigator_manager.dart';
 import 'package:clockie/service/provider/penthhouse_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,7 @@ class _AlarmPageState extends State<AlarmPage> with AutomaticKeepAliveClientMixi
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 10, 20, 0),
             child: IconButton(
-                onPressed: () => Navigator.pushNamed(context, '/alarm/more'),
+                onPressed: () => Navigator.pushNamed(context, NavigatorManager.addAlarmPath),
                 icon: const Icon(Icons.more_vert,size: 30,)
             ),
           ),
@@ -86,7 +87,7 @@ class _AlarmPageState extends State<AlarmPage> with AutomaticKeepAliveClientMixi
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: getFloatingButton(
           theme:PenthHouseProviders.themeProvider!.curTheme,
-          onPressd: () => Navigator.pushNamed(context, '/alarm/add'),
+          onPressd: () => Navigator.pushNamed(context, NavigatorManager.addAlarmPath),
           icon:const Icon(Icons.add,size: 30,),
           toolTip: 'Add Alarm',
           circle: false),

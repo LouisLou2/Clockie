@@ -44,16 +44,6 @@ Future<void> initDatabase() async{}
 
 void initBasicUI(){
   //目前是多余的
-  // SystemChrome.setSystemUIOverlayStyle(
-  //     const SystemUiOverlayStyle(
-  //         //systemStatusBarContrastEnforced: true,
-  //         //statusBarColor: Colors.green,
-  //         //statusBarIconBrightness: Brightness.dark,
-  //         systemNavigationBarColor: Colors.transparent,
-  //         systemNavigationBarIconBrightness: Brightness.dark,
-  //         systemNavigationBarDividerColor: Colors.transparent,
-  //     )
-  // );
 }
 Future<void> initNotification() async{
   WidgetsFlutterBinding.ensureInitialized();
